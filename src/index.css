@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 260 25% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 260 25% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 260 25% 11%;
+    --primary: 280 70% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 330 65% 55%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 260 15% 93%;
+    --muted-foreground: 260 10% 45%;
+    --accent: 200 75% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 260 10% 90%;
+    --input: 260 10% 90%;
+    --ring: 280 70% 55%;
+    --radius: 0.75rem;
+
+    --pride-red: 0 85% 60%;
+    --pride-orange: 30 90% 58%;
+    --pride-yellow: 50 95% 55%;
+    --pride-green: 150 70% 42%;
+    --pride-blue: 210 80% 55%;
+    --pride-purple: 280 75% 60%;
+    --pride-pink: 330 80% 60%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 260 30% 6%;
+    --foreground: 0 0% 95%;
+    --card: 260 25% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 260 25% 10%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 280 75% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 330 70% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 260 20% 15%;
+    --muted-foreground: 260 10% 55%;
+    --accent: 200 80% 60%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 260 15% 18%;
+    --input: 260 15% 18%;
+    --ring: 280 75% 65%;
+
+    --pride-red: 0 85% 65%;
+    --pride-orange: 30 90% 62%;
+    --pride-yellow: 50 95% 60%;
+    --pride-green: 150 70% 50%;
+    --pride-blue: 210 80% 60%;
+    --pride-purple: 280 75% 65%;
+    --pride-pink: 330 80% 65%;
+
+    --sidebar-background: 260 30% 8%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 260 20% 15%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 260 15% 18%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply backdrop-blur-xl border border-border/50;
+    background: hsl(var(--card) / 0.6);
+  }
+
+  .glass-strong {
+    @apply backdrop-blur-2xl border border-border/40;
+    background: hsl(var(--card) / 0.8);
+  }
+
+  .pride-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--pride-red)),
+      hsl(var(--pride-orange)),
+      hsl(var(--pride-yellow)),
+      hsl(var(--pride-green)),
+      hsl(var(--pride-blue)),
+      hsl(var(--pride-purple))
+    );
+  }
+
+  .pride-gradient-text {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--pride-red)),
+      hsl(var(--pride-orange)),
+      hsl(var(--pride-yellow)),
+      hsl(var(--pride-green)),
+      hsl(var(--pride-blue)),
+      hsl(var(--pride-purple))
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .pride-gradient-subtle {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--pride-purple) / 0.15),
+      hsl(var(--pride-pink) / 0.1),
+      hsl(var(--pride-blue) / 0.15)
+    );
+  }
+
+  .pride-border {
+    border-image: linear-gradient(
+      90deg,
+      hsl(var(--pride-red)),
+      hsl(var(--pride-orange)),
+      hsl(var(--pride-yellow)),
+      hsl(var(--pride-green)),
+      hsl(var(--pride-blue)),
+      hsl(var(--pride-purple))
+    ) 1;
+  }
+
+  .btn-pride {
+    @apply relative overflow-hidden rounded-xl px-6 py-3 font-heading font-semibold text-white transition-all duration-300;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    box-shadow: 0 4px 20px hsl(var(--primary) / 0.3);
+  }
+  .btn-pride:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px hsl(var(--primary) / 0.4);
+  }
+
+  .btn-outline-pride {
+    @apply relative overflow-hidden rounded-xl px-6 py-3 font-heading font-semibold transition-all duration-300 border-2;
+    border-color: hsl(var(--primary));
+    color: hsl(var(--primary));
+  }
+  .btn-outline-pride:hover {
+    background: hsl(var(--primary) / 0.1);
+    transform: translateY(-2px);
+  }
+
+  .card-hover {
+    @apply transition-all duration-300;
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px hsl(var(--primary) / 0.15);
+  }
+}
+
+@keyframes pride-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(5deg); }
+}
+
+.animate-pride-shift {
+  background-size: 300% 300%;
+  animation: pride-shift 8s ease infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+

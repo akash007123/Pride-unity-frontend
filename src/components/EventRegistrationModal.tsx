@@ -226,7 +226,7 @@ export const EventRegistrationModal = ({
                   <div className="flex items-center gap-2">
                     <Ticket size={18} className="text-primary" />
                     <span className="font-medium">
-                      {event.isFree ? "Free Event" : `$${event.price.toFixed(2)}`}
+                      {event.isFree ? "Free Event" : `₹${event.price.toFixed(2)}`}
                     </span>
                   </div>
                   <span className="text-sm text-muted-foreground">
@@ -255,7 +255,7 @@ export const EventRegistrationModal = ({
                   ) : event.isFree ? (
                     "Register Free"
                   ) : (
-                    `Pay $${event.price.toFixed(2)} & Register`
+                    `Pay ₹${event.price.toFixed(2)} & Register`
                   )}
                 </Button>
 

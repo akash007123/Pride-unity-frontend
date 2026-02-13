@@ -27,8 +27,11 @@ export const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 glass-strong" role="navigation" aria-label="Main navigation">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="text-xl font-heading font-bold pride-gradient-text">
-          PrideVoice
+        <Link to="/" className="flex items-center gap-2">
+          <img src="/icon.png" alt="logo" className="w-10 h-10" />
+          <span className="text-xl font-heading font-bold pride-gradient-text">
+            PrideVoice
+          </span>
         </Link>
 
         <div className="hidden lg:flex items-center gap-1">

@@ -83,7 +83,7 @@ const events = [
     organizer: { name: "PrideVoice Foundation", email: "gala@pridevoice.org" },
     featured: false,
     isFree: false,
-    price: 150,
+    price: 12450,
     tags: ["Formal", "Fundraiser", "Adults Only"],
     image: null,
     schedule: [
@@ -122,7 +122,7 @@ const events = [
     organizer: { name: "Film Committee", email: "films@pridevoice.org" },
     featured: false,
     isFree: false,
-    price: 25,
+    price: 2075,
     tags: ["Film", "Festival", "Arts"],
     image: null,
     schedule: [],
@@ -157,7 +157,7 @@ const events = [
     organizer: { name: "Youth Programs", email: "youth@pridevoice.org" },
     featured: false,
     isFree: false,
-    price: 350,
+    price: 29050,
     tags: ["Youth", "Overnight Camp", "Mentorship"],
     image: null,
     schedule: [],
@@ -277,7 +277,7 @@ const EventDetail = () => {
               )}
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary font-bold">
-                  {event.isFree ? "FREE" : `$${event.price}`}
+                  {event.isFree ? "FREE" : `₹${event.price}`}
                 </span>
               </div>
             </div>
@@ -426,7 +426,7 @@ const EventDetail = () => {
                     </div>
                     <div className="text-right">
                       <p className="text-3xl font-heading font-bold text-primary">
-                        {event.isFree ? "Free" : `$${event.price}`}
+                        {event.isFree ? "Free" : `₹${event.price}`}
                       </p>
                       {event.price > 0 && <p className="text-xs text-muted-foreground">per person</p>}
                     </div>
@@ -468,7 +468,7 @@ const EventDetail = () => {
                     ) : (
                       <>
                         <Ticket size={18} className="mr-2" />
-                        {event.isFree ? "Register Now" : `Pay $${event.price} & Register`}
+                        {event.isFree ? "Register Now" : `Pay ₹${event.price} & Register`}
                       </>
                     )}
                   </Button>

@@ -50,9 +50,10 @@ export const Footer = () => (
           <div className="lg:col-span-4 space-y-6">
             <Link 
               to="/" 
-              className="inline-flex items-center gap-2 text-3xl font-heading font-bold bg-gradient-to-r from-pride-red via-pride-orange to-pride-purple bg-clip-text text-transparent hover:scale-105 transition-transform duration-300"
+              className="inline-flex items-center gap-3 text-3xl font-heading font-bold bg-gradient-to-r from-pride-red via-pride-orange to-pride-purple bg-clip-text text-transparent hover:scale-105 transition-transform duration-300"
             >
-              PrideVoice
+              <img src="/icon.png" alt="PrideVoice logo" className="w-10 h-10" />
+              <span>PrideVoice</span>
               <Sparkles size={20} className="text-pride-yellow" />
             </Link>
             

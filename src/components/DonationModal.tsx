@@ -2,7 +2,6 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Heart,
-  DollarSign,
   CreditCard,
   Check,
   Sparkles,
@@ -22,10 +21,10 @@ import {
 import { Label } from "@/components/ui/label";
 
 const donationTiers = [
-  { amount: 10, label: "Supporter", impact: "Helps provide educational resources" },
-  { amount: 25, label: "Ally", impact: "Funds community events" },
-  { amount: 50, label: "Champion", impact: "Supports youth programs" },
-  { amount: 100, label: "Hero", impact: "Makes a real difference" },
+  { amount: 500, label: "Supporter", impact: "Helps provide educational resources" },
+  { amount: 1000, label: "Ally", impact: "Funds community events" },
+  { amount: 2000, label: "Champion", impact: "Supports youth programs" },
+  { amount: 5000, label: "Hero", impact: "Makes a real difference" },
 ];
 
 export const DonationModal = () => {
@@ -112,7 +111,7 @@ export const DonationModal = () => {
                           : "border-border hover:border-primary/50"
                       }`}
                     >
-                      <div className="text-2xl font-bold">${tier.amount}</div>
+                      <div className="text-2xl font-bold">₹{tier.amount.toLocaleString()}</div>
                       <div className="text-sm font-medium text-primary">{tier.label}</div>
                       <div className="text-xs text-muted-foreground mt-1">{tier.impact}</div>
                     </button>
@@ -121,7 +120,7 @@ export const DonationModal = () => {
 
                 {/* Custom Amount */}
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground font-medium">₹</span>
                   <Input
                     type="number"
                     placeholder="Custom amount"
@@ -139,7 +138,7 @@ export const DonationModal = () => {
                   size="lg"
                   onClick={() => setStep("details")}
                 >
-                  Continue with ${displayAmount}
+                  Continue with ₹{Number(displayAmount).toLocaleString()}
                 </Button>
               </div>
             </motion.div>
@@ -163,7 +162,7 @@ export const DonationModal = () => {
                 {/* Amount Summary */}
                 <div className="p-3 rounded-lg bg-muted flex items-center justify-between">
                   <span className="text-sm text-muted-foreground">Donation Amount</span>
-                  <span className="text-lg font-bold">${displayAmount}</span>
+                  <span className="text-lg font-bold">₹{Number(displayAmount).toLocaleString()}</span>
                 </div>
 
                 {/* Donor Form */}
@@ -233,9 +232,9 @@ export const DonationModal = () => {
                       </>
                     ) : (
                       <>
-                        <Heart className="mr-2 h-4 w-4 fill-current" />
-                        Donate ${displayAmount}
-                      </>
+                          <Heart className="mr-2 h-4 w-4 fill-current" />
+                          Donate ₹{Number(displayAmount).toLocaleString()}
+                        </>
                     )}
                   </Button>
                 </div>
@@ -268,7 +267,7 @@ export const DonationModal = () => {
               </h3>
 
               <p className="text-muted-foreground mb-6">
-                Your donation of ${displayAmount} helps make our community stronger.
+                Your donation of ₹{Number(displayAmount).toLocaleString()} helps make our community stronger.
                 A receipt has been sent to {isAnonymous ? "your email" : donorEmail}.
               </p>
 

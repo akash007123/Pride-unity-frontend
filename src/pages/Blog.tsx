@@ -1,23 +1,35 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { Clock, Tag, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { SocialShareButtons } from "@/components/SocialShareButtons";
 
+interface BlogPost {
+  id: number;
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+  readTime: string;
+  featured?: boolean;
+}
+
 const categories = ["All", "Identity", "Advocacy", "Community", "Wellness", "Culture"];
 
-const posts = [
-  { title: "Embracing Your Authentic Self", excerpt: "The journey to self-acceptance is rarely linear, but it's always worth taking. Here are steps that helped me embrace who I truly am.", category: "Identity", date: "Feb 8, 2026", readTime: "5 min", featured: true },
-  { title: "How to Be a Better Ally", excerpt: "Allyship is more than a label — it's a continuous practice. Learn practical ways to support the LGBTQ+ community.", category: "Advocacy", date: "Feb 1, 2026", readTime: "4 min" },
-  { title: "Building Queer Joy in Everyday Life", excerpt: "Pride isn't just for June. Discover how to cultivate daily moments of queer joy and celebration.", category: "Wellness", date: "Jan 25, 2026", readTime: "6 min" },
-  { title: "The Power of Representation", excerpt: "Why seeing yourself reflected in media, leadership, and art matters more than you might think.", category: "Culture", date: "Jan 18, 2026", readTime: "5 min" },
-  { title: "Navigating Family Conversations", excerpt: "Tips for having meaningful conversations about identity with family members who may not understand.", category: "Community", date: "Jan 10, 2026", readTime: "7 min" },
-  { title: "Pride Around the World", excerpt: "From São Paulo to Sydney, a look at how different cultures celebrate LGBTQ+ pride and progress.", category: "Culture", date: "Jan 3, 2026", readTime: "8 min" },
+const posts: BlogPost[] = [
+  { id: 1, title: "Embracing Your Authentic Self", excerpt: "The journey to self-acceptance is rarely linear, but it's always worth taking. Here are steps that helped me embrace who I truly am.", category: "Identity", date: "Feb 8, 2026", readTime: "5 min", featured: true },
+  { id: 2, title: "How to Be a Better Ally", excerpt: "Allyship is more than a label — it's a continuous practice. Learn practical ways to support the LGBTQ+ community.", category: "Advocacy", date: "Feb 1, 2026", readTime: "4 min" },
+  { id: 3, title: "Building Queer Joy in Everyday Life", excerpt: "Pride isn't just for June. Discover how to cultivate daily moments of queer joy and celebration.", category: "Wellness", date: "Jan 25, 2026", readTime: "6 min" },
+  { id: 4, title: "The Power of Representation", excerpt: "Why seeing yourself reflected in media, leadership, and art matters more than you might think.", category: "Culture", date: "Jan 18, 2026", readTime: "5 min" },
+  { id: 5, title: "Navigating Family Conversations", excerpt: "Tips for having meaningful conversations about identity with family members who may not understand.", category: "Community", date: "Jan 10, 2026", readTime: "7 min" },
+  { id: 6, title: "Pride Around the World", excerpt: "From São Paulo to Sydney, a look at how different cultures celebrate LGBTQ+ pride and progress.", category: "Culture", date: "Jan 3, 2026", readTime: "8 min" },
 ];
 
 const Blog = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [page, setPage] = useState(1);
+  const navigate = useNavigate();
 
   const filtered = activeCategory === "All" ? posts : posts.filter((p) => p.category === activeCategory);
   const featured = posts.find((p) => p.featured);
@@ -41,7 +53,10 @@ const Blog = () => {
       {featured && (
         <AnimatedSection className="py-12">
           <div className="container mx-auto px-4">
-            <div className="glass rounded-3xl overflow-hidden card-hover">
+            <div
+              className="glass rounded-3xl overflow-hidden card-hover cursor-pointer transition-all hover:shadow-lg hover:shadow-primary/10"
+              onClick={() => navigate(`/blog/${featured.id}`)}
+            >
               <div className="pride-gradient h-1.5 animate-pride-shift" />
               <div className="p-8 sm:p-12">
                 <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-4">Featured</span>
@@ -96,6 +111,7 @@ const Blog = () => {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
                 className="glass rounded-2xl overflow-hidden card-hover group cursor-pointer"
+                onClick={() => navigate(`/blog/${post.id}`)}
               >
                 <div className="h-40 pride-gradient-subtle" />
                 <div className="p-6">

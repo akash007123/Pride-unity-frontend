@@ -14,9 +14,14 @@ import Resources from "./pages/Resources";
 import Community from "./pages/Community";
 import Events from "./pages/Events";
 import Blog from "./pages/Blog";
+import BlogDetail from "./pages/BlogDetail";
+import EventDetail from "./pages/EventDetail";
 import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
 import NotFound from "./pages/NotFound";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import AccessibilityPage from "./pages/Accessibility";
 
 const queryClient = new QueryClient();
 
@@ -42,9 +47,14 @@ const AnimatedRoutes = () => {
         <Route path="/resources" element={<PageWrapper><Resources /></PageWrapper>} />
         <Route path="/community" element={<PageWrapper><Community /></PageWrapper>} />
         <Route path="/events" element={<PageWrapper><Events /></PageWrapper>} />
+        <Route path="/events/:id" element={<PageWrapper><EventDetail /></PageWrapper>} />
         <Route path="/blog" element={<PageWrapper><Blog /></PageWrapper>} />
+        <Route path="/blog/:id" element={<PageWrapper><BlogDetail /></PageWrapper>} />
         <Route path="/faq" element={<PageWrapper><FAQ /></PageWrapper>} />
         <Route path="/contact" element={<PageWrapper><Contact /></PageWrapper>} />
+        <Route path="/privacy" element={<PageWrapper><Privacy /></PageWrapper>} />
+        <Route path="/terms" element={<PageWrapper><Terms /></PageWrapper>} />
+        <Route path="/accessibility" element={<PageWrapper><AccessibilityPage /></PageWrapper>} />
         <Route path="*" element={<PageWrapper><NotFound /></PageWrapper>} />
       </Routes>
     </AnimatePresence>

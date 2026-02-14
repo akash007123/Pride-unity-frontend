@@ -4,6 +4,7 @@ import { Heart, Users, Calendar, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { MemberSpotlight } from "@/components/MemberSpotlight";
 import { VolunteerSignupModal } from "@/components/VolunteerSignupForm";
+import { JoinCommunityModal } from "@/components/JoinCommunityModal";
 
 const reasons = [
   { title: "Belonging", desc: "Finding your people — those who understand, accept, and celebrate you." },
@@ -18,13 +19,10 @@ const upcomingEvents = [
   { title: "Ally Workshop", date: "Apr 5", location: "Community Center", desc: "Learn how to be a better ally to the LGBTQ+ community." },
 ];
 
-const galleryColors = [
-  "from-pride-red to-pride-orange",
-  "from-pride-orange to-pride-yellow",
-  "from-pride-yellow to-pride-green",
-  "from-pride-green to-pride-blue",
-  "from-pride-blue to-pride-purple",
-  "from-pride-purple to-pride-pink",
+const galleryImages = [
+  { src: "https://images.pexels.com/photos/19608207/pexels-photo-19608207/free-photo-of-pride-celebration-12.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500", alt: "Pride Celebration", overlay: "from-pride-red/60 to-pride-orange/60" },
+  { src: "https://im.indiatimes.in/content/2016/May/equal_1463739382.jpg?w=400&h=267&cc=1&webp=1&q=75", alt: "Community Gathering", overlay: "from-pride-orange/60 to-pride-yellow/60" },
+  { src: "https://sitescdn.wearevennture.co.uk/public/franklin-fitch/mediahub/anxietyblogpicture4-4ec59ce2f3c94b45880ad4d1c0aa09a4.jpg", alt: "Pride Flags", overlay: "from-pride-yellow/60 to-pride-green/60" },
 ];
 
 const Community = () => (
@@ -74,9 +72,7 @@ const Community = () => (
             Connect with like-minded individuals, share your story, and be part of a
             movement that celebrates love in all its forms.
           </p>
-          <button className="btn-pride inline-flex items-center gap-2">
-            <Heart size={16} /> Join Now
-          </button>
+          <JoinCommunityModal />
         </div>
       </div>
     </AnimatedSection>
@@ -120,7 +116,7 @@ const Community = () => (
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-heading font-bold text-center mb-12">Pride Gallery</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {galleryColors.map((g, i) => (
+          {galleryImages.map((img, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -128,8 +124,18 @@ const Community = () => (
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
               whileHover={{ scale: 1.03 }}
-              className={`aspect-square rounded-2xl bg-gradient-to-br ${g} opacity-80 hover:opacity-100 transition-opacity cursor-pointer`}
-            />
+              className="aspect-square rounded-2xl overflow-hidden cursor-pointer relative group"
+            >
+              <img 
+                src={img.src} 
+                alt={img.alt}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+              <div className={`absolute inset-0 bg-gradient-to-br ${img.overlay} opacity-60 group-hover:opacity-40 transition-opacity`} />
+              <div className="absolute bottom-0 left-0 right-0 p-3 bg-black/30 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                <p className="text-white text-sm font-medium text-center">{img.alt}</p>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>

@@ -9,6 +9,8 @@ import { PageLoader } from "@/components/PageLoader";
 import { MainLayout } from "@/layouts/MainLayout";
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import MyStory from "./pages/MyStory";
@@ -26,6 +28,10 @@ import Terms from "./pages/Terms";
 import AccessibilityPage from "./pages/Accessibility";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminContacts from "./pages/AdminContacts";
+import AdminCommunity from "./pages/AdminCommunity";
+import AdminVolunteers from "./pages/AdminVolunteers";
+import AdminLogin from "./pages/AdminLogin";
+import AdminRegister from "./pages/AdminRegister";
 
 const queryClient = new QueryClient();
 
@@ -44,41 +50,53 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider>
       <TooltipProvider>
-        <PageLoader />
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Public routes with MainLayout (includes header, navbar, footer) */}
-            <Route element={<MainLayout />}>
-              <Route path="/" element={<PageWrapper><Index /></PageWrapper>} />
-              <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
-              <Route path="/my-story" element={<PageWrapper><MyStory /></PageWrapper>} />
-              <Route path="/resources" element={<PageWrapper><Resources /></PageWrapper>} />
-              <Route path="/community" element={<PageWrapper><Community /></PageWrapper>} />
-              <Route path="/events" element={<PageWrapper><Events /></PageWrapper>} />
-              <Route path="/events/:id" element={<PageWrapper><EventDetail /></PageWrapper>} />
-              <Route path="/blog" element={<PageWrapper><Blog /></PageWrapper>} />
-              <Route path="/blog/:id" element={<PageWrapper><BlogDetail /></PageWrapper>} />
-              <Route path="/faq" element={<PageWrapper><FAQ /></PageWrapper>} />
-              <Route path="/contact" element={<PageWrapper><Contact /></PageWrapper>} />
-              <Route path="/privacy" element={<PageWrapper><Privacy /></PageWrapper>} />
-              <Route path="/terms" element={<PageWrapper><Terms /></PageWrapper>} />
-              <Route path="/accessibility" element={<PageWrapper><AccessibilityPage /></PageWrapper>} />
-              <Route path="*" element={<PageWrapper><NotFound /></PageWrapper>} />
-            </Route>
-            
-            {/* Admin routes with clean AdminLayout (no header, navbar, footer) */}
-            <Route path="/admin" element={
-              <SidebarProvider>
-                <AdminLayout />
-              </SidebarProvider>
-            }>
-              <Route index element={<AdminDashboard />} />
-              <Route path="contacts" element={<AdminContacts />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
+        <AuthProvider>
+          <PageLoader />
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Public routes with MainLayout (includes header, navbar, footer) */}
+              <Route element={<MainLayout />}>
+                <Route path="/" element={<PageWrapper><Index /></PageWrapper>} />
+                <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
+                <Route path="/my-story" element={<PageWrapper><MyStory /></PageWrapper>} />
+                <Route path="/resources" element={<PageWrapper><Resources /></PageWrapper>} />
+                <Route path="/community" element={<PageWrapper><Community /></PageWrapper>} />
+                <Route path="/events" element={<PageWrapper><Events /></PageWrapper>} />
+                <Route path="/events/:id" element={<PageWrapper><EventDetail /></PageWrapper>} />
+                <Route path="/blog" element={<PageWrapper><Blog /></PageWrapper>} />
+                <Route path="/blog/:id" element={<PageWrapper><BlogDetail /></PageWrapper>} />
+                <Route path="/faq" element={<PageWrapper><FAQ /></PageWrapper>} />
+                <Route path="/contact" element={<PageWrapper><Contact /></PageWrapper>} />
+                <Route path="/privacy" element={<PageWrapper><Privacy /></PageWrapper>} />
+                <Route path="/terms" element={<PageWrapper><Terms /></PageWrapper>} />
+                <Route path="/accessibility" element={<PageWrapper><AccessibilityPage /></PageWrapper>} />
+                <Route path="*" element={<PageWrapper><NotFound /></PageWrapper>} />
+              </Route>
+
+              {/* Admin auth routes (public) */}
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/register" element={<AdminRegister />} />
+
+              {/* Admin routes with authentication */}
+              <Route
+                element={
+                  <ProtectedRoute>
+                    <SidebarProvider>
+                      <AdminLayout />
+                    </SidebarProvider>
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="/admin" index element={<AdminDashboard />} />
+                <Route path="admin/contacts" element={<AdminContacts />} />
+                <Route path="admin/community" element={<AdminCommunity />} />
+                <Route path="admin/volunteer" element={<AdminVolunteers />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
       </TooltipProvider>
     </ThemeProvider>
   </QueryClientProvider>

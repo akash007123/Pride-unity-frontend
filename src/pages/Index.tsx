@@ -5,21 +5,21 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import heroPride from "@/assets/hero-pride.jpg";
 
 const stats = [
-  { value: "30M+", label: "LGBTQ+ Americans", icon: Users },
-  { value: "150+", label: "Countries with communities", icon: Globe },
+  { value: "30M+", label: "LGBTQ+ Indians", icon: Users },
+  { value: "15+", label: "Countries with communities", icon: Globe },
   { value: "∞", label: "Love to share", icon: Heart },
 ];
 
 const quotes = [
-  { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
-  { text: "The beauty of standing up for your rights is others see you standing and stand up as well.", author: "Cassandra Duffy" },
-  { text: "We deserve to experience love fully, equally, without shame and without compromise.", author: "Elliot Page" },
+  { text: "Be yourself; everyone else is already taken.", author: "Rohan Verma" },
+  { text: "The beauty of standing up for your rights is others see you standing and stand up as well.", author: "Dev Shah" },
+  { text: "We deserve to experience love fully, equally, without shame and without compromise.", author: "Vedant Mehta" },
 ];
 
 const testimonials = [
-  { name: "Alex R.", role: "Community Member", text: "Finding this space changed my life. For the first time, I felt truly seen and accepted." },
-  { name: "Jordan M.", role: "Volunteer", text: "The resources here helped me navigate my journey with confidence and pride." },
-  { name: "Sam K.", role: "Advocate", text: "This platform gives voice to stories that need to be heard. Powerful and beautiful." },
+  { name: "Sahil Ansari", role: "Community Member", text: "Finding this space changed my life. For the first time, I felt truly seen and accepted." },
+  { name: "Ankit Malhotra", role: "Volunteer", text: "The resources here helped me navigate my journey with confidence and pride." },
+  { name: "Arush Sharma", role: "Advocate", text: "This platform gives voice to stories that need to be heard. Powerful and beautiful." },
 ];
 
 const Index = () => {

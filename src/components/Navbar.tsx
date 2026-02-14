@@ -13,8 +13,8 @@ const navLinks = [
   { path: "/my-story", label: "My Story" },
   { path: "/resources", label: "Resources" },
   { path: "/community", label: "Community" },
-  { path: "/events", label: "Events" },
-  { path: "/blog", label: "Blog" },
+  // { path: "/events", label: "Events" },
+  // { path: "/blog", label: "Blog" },
   { path: "/faq", label: "FAQ" },
   { path: "/contact", label: "Contact" },
 ];

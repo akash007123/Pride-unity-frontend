@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Contact } from '@/services/contactApi';
 import { format } from 'date-fns';
-import { Mail, Phone, MessageSquare, Calendar, FileText } from 'lucide-react';
+import { Mail, Phone, Calendar, FileText } from 'lucide-react';
 
 interface ViewContactModalProps {
   contact: Contact | null;
@@ -30,8 +30,8 @@ export function ViewContactModal({ contact, open, onOpenChange }: ViewContactMod
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[600px] max-h-[85vh] overflow-hidden flex flex-col">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
             Contact Details
@@ -41,7 +41,7 @@ export function ViewContactModal({ contact, open, onOpenChange }: ViewContactMod
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4 py-4 overflow-y-auto pr-2">
           {/* Status Badge */}
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">Status</span>

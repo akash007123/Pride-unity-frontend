@@ -442,9 +442,9 @@ const Contact = () => {
               {/* Contact Cards */}
               <motion.div variants={staggerChildren} initial="initial" animate="animate" className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {[
-                  { icon: Mail, title: "Email Us", content: "hello@pridevoice.com", color: "from-blue-500/20 to-cyan-500/20" },
-                  { icon: Phone, title: "Call Us", content: "+1 (555) 123-4567", color: "from-green-500/20 to-emerald-500/20" },
-                  { icon: MapPin, title: "Location", content: "San Francisco, CA", color: "from-purple-500/20 to-pink-500/20" },
+                  { icon: Mail, title: "Email Us", content: "loveforprideunity@gmail.com", color: "from-blue-500/20 to-cyan-500/20" },
+                  { icon: Phone, title: "Call Us", content: "+91-9074211713", color: "from-green-500/20 to-emerald-500/20" },
+                  { icon: MapPin, title: "Location", content: "Agar Road, Ujjain, MP 456010", color: "from-purple-500/20 to-pink-500/20" },
                   { icon: MessageCircle, title: "Live Chat", content: "Available 24/7", color: "from-orange-500/20 to-red-500/20" },
                 ].map((item, index) => (
                   <motion.div

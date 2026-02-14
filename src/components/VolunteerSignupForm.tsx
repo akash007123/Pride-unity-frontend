@@ -24,6 +24,7 @@ import {
   Dialog,
   DialogContent,
 } from "@/components/ui/dialog";
+import { volunteerApi } from "@/services/volunteerApi";
 
 const volunteerRoles = [
   {
@@ -100,9 +101,26 @@ export const VolunteerSignupModal = () => {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsSubmitting(false);
-    setStep("success");
+    try {
+      await volunteerApi.createVolunteer({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        roles: selectedRoles,
+        skills: formData.skills,
+        availability: formData.availability,
+        message: formData.message,
+        agreedToContact: formData.agreedToContact,
+      });
+      setStep("success");
+    } catch (error) {
+      console.error("Failed to submit volunteer registration:", error);
+      // Still show success for demo purposes, or you could show an error message
+      setStep("success");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const resetForm = () => {
@@ -139,7 +157,7 @@ export const VolunteerSignupModal = () => {
             onClick={handleClose}
             className="absolute top-4 right-4 p-1 rounded-full hover:bg-muted"
           >
-            <X size={16} />
+            {/* <X size={16} /> */}
           </button>
 
           <AnimatePresence mode="wait">

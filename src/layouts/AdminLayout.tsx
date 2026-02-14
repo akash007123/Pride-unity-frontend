@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation, Outlet } from 'react-router-dom';
+import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import {
   Sidebar,
   SidebarContent,
@@ -37,7 +37,7 @@ import {
   Mail,
   FileText,
   BarChart3,
-  Shield
+  UserPlus
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
@@ -45,6 +45,9 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useQuery } from '@tanstack/react-query';
 import { contactApi } from '@/services/contactApi';
+import { volunteerApi } from '@/services/volunteerApi';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 const adminNavItems = [
   {
@@ -57,6 +60,18 @@ const adminNavItems = [
     title: 'Contacts',
     href: '/admin/contacts',
     icon: Mail,
+    badge: 'new',
+  },
+  {
+    title: 'Community',
+    href: '/admin/community',
+    icon: UserPlus,
+    badge: 'new',
+  },
+  {
+    title: 'Volunteer',
+    href: '/admin/volunteer',
+    icon: UserPlus,
     badge: 'new',
   },
   {
@@ -84,12 +99,26 @@ const adminNavItems = [
 
 function AdminSidebar() {
   const location = useLocation();
+  const { admin, logout } = useAuth();
+  const navigate = useNavigate();
   const { data: stats } = useQuery({
     queryKey: ['contactStats'],
     queryFn: () => contactApi.getStats(),
   });
 
+  const { data: volunteerStats } = useQuery({
+    queryKey: ['volunteerStats'],
+    queryFn: () => volunteerApi.getStats(),
+  });
+
   const newContactsCount = stats?.data?.byStatus?.new || 0;
+  const newVolunteersCount = volunteerStats?.data?.byStatus?.pending || 0;
+
+  const handleLogout = () => {
+    logout();
+    toast.success('Logged out successfully');
+    navigate('/admin/login');
+  };
 
   return (
     <Sidebar className="border-r bg-card">
@@ -122,10 +151,17 @@ function AdminSidebar() {
                     <Link to={item.disabled ? '#' : item.href} className="flex items-center">
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
-                      {item.badge === 'new' && newContactsCount > 0 && (
+                      {item.badge === 'new' && item.href === '/admin/contacts' && newContactsCount > 0 && (
                         <SidebarMenuBadge>
                           <Badge variant="destructive" className="h-5 px-1.5 text-[10px]">
                             {newContactsCount}
+                          </Badge>
+                        </SidebarMenuBadge>
+                      )}
+                      {item.badge === 'new' && item.href === '/admin/volunteer' && newVolunteersCount > 0 && (
+                        <SidebarMenuBadge>
+                          <Badge variant="destructive" className="h-5 px-1.5 text-[10px]">
+                            {newVolunteersCount}
                           </Badge>
                         </SidebarMenuBadge>
                       )}
@@ -171,12 +207,17 @@ function AdminSidebar() {
       <SidebarFooter className="border-t p-4">
         <div className="flex items-center gap-3">
           <Avatar className="h-9 w-9 border-2 border-primary/20">
-            <AvatarImage src="/avatars/admin.png" />
-            <AvatarFallback className="bg-primary/10 text-primary">AD</AvatarFallback>
+            <AvatarImage src={admin?.profilePic || '/avatars/admin.png'} />
+            <AvatarFallback className="bg-primary/10 text-primary">
+              {admin?.name?.charAt(0).toUpperCase() || 'AD'}
+            </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium leading-none">Admin User</p>
-            <p className="text-xs text-muted-foreground truncate mt-1">admin@pride.com</p>
+            <p className="text-sm font-medium leading-none">{admin?.name || 'Admin User'}</p>
+            <p className="text-xs text-muted-foreground truncate mt-1">{admin?.email || 'admin@pride.com'}</p>
+            <p className="text-xs text-purple-600 truncate mt-0.5 capitalize">
+              {admin?.role?.replace('_', ' ') || 'Sub Admin'}
+            </p>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -200,11 +241,9 @@ function AdminSidebar() {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link to="/" className="cursor-pointer text-destructive">
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
-                </Link>
+              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive">
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -217,17 +256,31 @@ function AdminSidebar() {
 function MobileSidebar() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const { admin, logout } = useAuth();
+  const navigate = useNavigate();
   const { data: stats } = useQuery({
     queryKey: ['contactStats'],
     queryFn: () => contactApi.getStats(),
   });
 
+  const { data: volunteerStats } = useQuery({
+    queryKey: ['volunteerStats'],
+    queryFn: () => volunteerApi.getStats(),
+  });
+
   const newContactsCount = stats?.data?.byStatus?.new || 0;
+  const newVolunteersCount = volunteerStats?.data?.byStatus?.pending || 0;
 
   // Close sidebar on route change
   useEffect(() => {
     setOpen(false);
   }, [location.pathname]);
+
+  const handleLogout = () => {
+    logout();
+    toast.success('Logged out successfully');
+    navigate('/admin/login');
+  };
 
   return (
     <>
@@ -276,9 +329,14 @@ function MobileSidebar() {
                       <item.icon className="h-4 w-4" />
                       <span>{item.title}</span>
                     </div>
-                    {item.badge === 'new' && newContactsCount > 0 && (
+                    {item.badge === 'new' && item.href === '/admin/contacts' && newContactsCount > 0 && (
                       <Badge variant="destructive" className="h-5 px-1.5 text-[10px]">
                         {newContactsCount}
+                      </Badge>
+                    )}
+                    {item.badge === 'new' && item.href === '/admin/volunteer' && newVolunteersCount > 0 && (
+                      <Badge variant="destructive" className="h-5 px-1.5 text-[10px]">
+                        {newVolunteersCount}
                       </Badge>
                     )}
                     {item.disabled && (
@@ -295,13 +353,19 @@ function MobileSidebar() {
           <div className="absolute bottom-0 left-0 right-0 border-t bg-card p-4">
             <div className="flex items-center gap-3">
               <Avatar className="h-10 w-10">
-                <AvatarFallback>AD</AvatarFallback>
+                <AvatarImage src={admin?.profilePic} />
+                <AvatarFallback>
+                  {admin?.name?.charAt(0).toUpperCase() || 'AD'}
+                </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <p className="text-sm font-medium">Admin User</p>
-                <p className="text-xs text-muted-foreground">admin@pride.com</p>
+                <p className="text-sm font-medium">{admin?.name || 'Admin User'}</p>
+                <p className="text-xs text-muted-foreground">{admin?.email || 'admin@pride.com'}</p>
+                <p className="text-xs text-purple-600 capitalize">
+                  {admin?.role?.replace('_', ' ') || 'Sub Admin'}
+                </p>
               </div>
-              <Button variant="ghost" size="icon" className="text-destructive">
+              <Button variant="ghost" size="icon" onClick={handleLogout} className="text-destructive">
                 <LogOut className="h-4 w-4" />
               </Button>
             </div>
@@ -314,6 +378,8 @@ function MobileSidebar() {
 
 export function AdminLayout() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { admin, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -322,6 +388,12 @@ export function AdminLayout() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLogout = () => {
+    logout();
+    toast.success('Logged out successfully');
+    navigate('/admin/login');
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -396,17 +468,22 @@ export function AdminLayout() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                       <Avatar className="h-10 w-10">
-                        <AvatarImage src="/avatars/admin.png" />
-                        <AvatarFallback>AD</AvatarFallback>
+                        <AvatarImage src={admin?.profilePic || '/avatars/admin.png'} />
+                        <AvatarFallback>
+                          {admin?.name?.charAt(0).toUpperCase() || 'AD'}
+                        </AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">
                     <DropdownMenuLabel>
                       <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">Admin User</p>
+                        <p className="text-sm font-medium leading-none">{admin?.name || 'Admin User'}</p>
                         <p className="text-xs leading-none text-muted-foreground">
-                          admin@pride.com
+                          {admin?.email || 'admin@pride.com'}
+                        </p>
+                        <p className="text-xs leading-none text-purple-600 capitalize mt-1">
+                          {admin?.role?.replace('_', ' ') || 'Sub Admin'}
                         </p>
                       </div>
                     </DropdownMenuLabel>
@@ -424,11 +501,9 @@ export function AdminLayout() {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link to="/" className="cursor-pointer text-destructive">
-                        <LogOut className="h-4 w-4 mr-2" />
-                        Sign out
-                      </Link>
+                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive">
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

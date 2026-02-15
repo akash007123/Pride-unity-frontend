@@ -60,12 +60,16 @@ export const contactApi = {
     limit?: number;
     status?: string;
     search?: string;
+    sortBy?: 'date' | 'name';
+    sortOrder?: 'asc' | 'desc';
   }): Promise<PaginatedContacts> => {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.set('page', params.page.toString());
     if (params?.limit) searchParams.set('limit', params.limit.toString());
     if (params?.status) searchParams.set('status', params.status);
     if (params?.search) searchParams.set('search', params.search);
+    if (params?.sortBy) searchParams.set('sortBy', params.sortBy);
+    if (params?.sortOrder) searchParams.set('sortOrder', params.sortOrder);
 
     const query = searchParams.toString();
     return fetchApi<PaginatedContacts>(`/api/contacts${query ? `?${query}` : ''}`);

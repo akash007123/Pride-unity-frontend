@@ -21,8 +21,9 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Eye, Edit, Trash2, Search, Calendar, MapPin, Users, Plus } from 'lucide-react';
+import { Eye, Edit, Trash2, Search, Calendar, MapPin, Users, Plus, Ticket } from 'lucide-react';
 import { eventApi, Event } from '@/services/eventApi';
+import { Link } from 'react-router-dom';
 import { ViewEventModal } from '@/components/admin/ViewEventModal';
 import { EditEventModal } from '@/components/admin/EditEventModal';
 import { DeleteEventModal } from '@/components/admin/DeleteEventModal';
@@ -275,6 +276,15 @@ export default function AdminEvents() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          asChild
+                        >
+                          <Link to={`/admin/events/${event.id}/registrations`}>
+                            <Ticket className="h-4 w-4" />
+                          </Link>
+                        </Button>
                         <Button
                           variant="ghost"
                           size="icon"

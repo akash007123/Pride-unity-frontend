@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -20,171 +21,54 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-
-// Sample event data with expanded details
-const events = [
-  {
-    id: "1",
-    title: "Pride March 2026",
-    date: "June 28, 2026",
-    time: "10:00 AM - 4:00 PM",
-    location: "City Center, Downtown",
-    attendees: 5234,
-    maxAttendees: 10000,
-    desc: "Join the annual Pride March celebrating love, diversity, and equality. Walk with us through the heart of the city with thousands of community members, allies, and supporters.",
-    fullDescription: `
-      <p>Get ready for the most vibrant celebration of the year! Our Annual Pride March brings together thousands of community members, allies, and supporters for a day of joy, visibility, and solidarity.</p>
-      
-      <h2>What to Expect</h2>
-      <p>The march will begin at City Hall at 10:00 AM and proceed through Downtown, ending at Pride Park where festivities continue until 4:00 PM.</p>
-      
-      <ul>
-        <li>Colorful floats and decorated vehicles</li>
-        <li>Live music and performances along the route</li>
-        <li>Community organizations and resources</li>
-        <li>Family-friendly activities and entertainment</li>
-        <li>Food vendors and local artisans</li>
-      </ul>
-      
-      <h2>Accessibility</h2>
-      <p>We are committed to making this event accessible to all. Wheelchair-accessible viewing areas will be available along the route, and ASL interpreters will be present at the main stage.</p>
-      
-      <h2>What to Bring</h2>
-      <ul>
-        <li>Water bottle (refill stations available)</li>
-        <li>Sunscreen and hat</li>
-        <li>Comfortable walking shoes</li>
-        <li>Rain gear (just in case!)</li>
-        <li>Your pride and joy!</li>
-      </ul>
-    `,
-    organizer: { name: "PrideVoice Community", email: "events@pridevoice.org" },
-    featured: true,
-    isFree: true,
-    tags: ["In-Person", "Family-Friendly", "Accessible"],
-    image: null,
-    schedule: [
-      { time: "10:00 AM", event: "March Begins - City Hall" },
-      { time: "11:30 AM", event: "Main Stage Performances - Pride Park" },
-      { time: "1:00 PM", event: "Community Awards Ceremony" },
-      { time: "3:00 PM", event: "Final Celebration" },
-    ],
-  },
-  {
-    id: "2",
-    title: "Rainbow Gala",
-    date: "March 22, 2026",
-    time: "7:00 PM - 11:00 PM",
-    location: "Grand Ballroom, 500 Main Street",
-    attendees: 287,
-    maxAttendees: 300,
-    desc: "An elegant evening of celebration, fundraising, and community. Formal attire encouraged.",
-    fullDescription: "<p>An elegant evening of celebration, fundraising, and community...</p>",
-    organizer: { name: "PrideVoice Foundation", email: "gala@pridevoice.org" },
-    featured: false,
-    isFree: false,
-    price: 12450,
-    tags: ["Formal", "Fundraiser", "Adults Only"],
-    image: null,
-    schedule: [
-      { time: "7:00 PM", event: "Cocktail Reception" },
-      { time: "8:00 PM", event: "Dinner & Program" },
-      { time: "10:00 PM", event: "Dancing & Networking" },
-    ],
-  },
-  {
-    id: "3",
-    title: "Ally Training Workshop",
-    date: "April 5, 2026",
-    time: "2:00 PM - 5:00 PM",
-    location: "Community Center, 123 Unity Ave",
-    attendees: 42,
-    maxAttendees: 50,
-    desc: "Learn actionable ways to support the LGBTQ+ community in your workplace and daily life.",
-    fullDescription: "<p>Learn actionable ways to support the LGBTQ+ community...</p>",
-    organizer: { name: "Education Team", email: "training@pridevoice.org" },
-    featured: false,
-    isFree: true,
-    tags: ["Workshop", "Educational"],
-    image: null,
-    schedule: [],
-  },
-  {
-    id: "4",
-    title: "Queer Film Festival",
-    date: "May 10-12, 2026",
-    time: "6:00 PM - 11:00 PM",
-    location: "Indie Cinema, 456 Arts District",
-    attendees: 156,
-    maxAttendees: 200,
-    desc: "Three days of powerful LGBTQ+ cinema featuring independent filmmakers from around the world.",
-    fullDescription: "<p>Three days of powerful LGBTQ+ cinema...</p>",
-    organizer: { name: "Film Committee", email: "films@pridevoice.org" },
-    featured: false,
-    isFree: false,
-    price: 2075,
-    tags: ["Film", "Festival", "Arts"],
-    image: null,
-    schedule: [],
-  },
-  {
-    id: "5",
-    title: "Virtual Pride Meetup",
-    date: "Monthly",
-    time: "8:00 PM - 9:30 PM",
-    location: "Online (Zoom)",
-    attendees: 134,
-    maxAttendees: null,
-    desc: "Our monthly virtual gathering for stories, support, laughter, and connection. Open to all.",
-    fullDescription: "<p>Our monthly virtual gathering...</p>",
-    organizer: { name: "Virtual Community", email: "virtual@pridevoice.org" },
-    featured: false,
-    isFree: true,
-    tags: ["Virtual", "Monthly", "Open to All"],
-    image: null,
-    schedule: [],
-  },
-  {
-    id: "6",
-    title: "Youth Pride Camp",
-    date: "July 15-20, 2026",
-    time: "All Day",
-    location: "Lakeside Retreat, 50 miles from city",
-    attendees: 68,
-    maxAttendees: 80,
-    desc: "A safe, fun-filled camp for LGBTQ+ youth aged 14-18. Activities, mentorship, and friendship.",
-    fullDescription: "<p>A safe, fun-filled camp for LGBTQ+ youth...</p>",
-    organizer: { name: "Youth Programs", email: "youth@pridevoice.org" },
-    featured: false,
-    isFree: false,
-    price: 29050,
-    tags: ["Youth", "Overnight Camp", "Mentorship"],
-    image: null,
-    schedule: [],
-  },
-];
+import { EventRegistrationModal } from "@/components/EventRegistrationModal";
+import { eventApi, Event } from "@/services/eventApi";
 
 const EventDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [isRegistering, setIsRegistering] = useState(false);
 
-  const event = events.find((e) => e.id === id) || events[0];
-  const relatedEvents = events.filter((e) => e.id !== event.id).slice(0, 3);
-  const upcomingEvents = events.filter((e) => e.id !== event.id).slice(0, 4);
+  const { data: eventData, isLoading, error } = useQuery({
+    queryKey: ['event', id],
+    queryFn: () => eventApi.getEvent(id!),
+    enabled: !!id,
+  });
 
-  const spotsLeft = event.maxAttendees ? event.maxAttendees - event.attendees : null;
-  const isSoldOut = spotsLeft !== null && spotsLeft <= 0;
+  const { data: eventsData } = useQuery({
+    queryKey: ['events'],
+    queryFn: () => eventApi.getEvents({ limit: 5 }),
+  });
 
-  const handleRegister = () => {
-    setIsRegistering(true);
-    setTimeout(() => {
-      setIsRegistering(false);
-      alert(`Registration for ${event.title} would open the modal here!`);
-    }, 1500);
-  };
+  const event = eventData?.data;
+  const allEvents = eventsData?.data || [];
+  const relatedEvents = event 
+    ? allEvents.filter((e) => e.id !== event.id).slice(0, 3)
+    : [];
+
+  const spotsLeft = event?.spotsLeft ?? null;
+  const isSoldOut = event?.isSoldOut ?? false;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2">Loading event...</span>
+      </div>
+    );
+  }
+
+  if (error || !event) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <p className="text-destructive">Event not found</p>
+        <Button onClick={() => navigate("/events")}>
+          Back to Events
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -211,7 +95,7 @@ const EventDetail = () => {
             className="max-w-4xl"
           >
             <div className="flex flex-wrap items-center gap-3 mb-4">
-              {event.tags.map((tag) => (
+              {event.tags?.map((tag) => (
                 <Badge key={tag} className="btn-pride" variant="secondary">
                   {tag}
                 </Badge>
@@ -265,7 +149,7 @@ const EventDetail = () => {
             <div className="flex flex-wrap items-center gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <Users size={16} className="text-muted-foreground" />
-                <span>{event.attendees.toLocaleString()} attending</span>
+                <span>{event.currentAttendees.toLocaleString()} attending</span>
               </div>
               {spotsLeft !== null && (
                 <div className={`flex items-center gap-2 ${spotsLeft < 50 ? "text-amber-500" : "text-green-500"}`}>
@@ -340,7 +224,7 @@ const EventDetail = () => {
                     </div>
                     <SocialShareButtons
                       title={event.title}
-                      description={event.desc}
+                      description={event.description}
                       showLabel={true}
                     />
                   </div>
@@ -349,12 +233,14 @@ const EventDetail = () => {
                   <div className="mb-10">
                     <h2 className="text-2xl font-heading font-bold mb-4">About This Event</h2>
                     <p className="text-muted-foreground text-lg leading-relaxed mb-4">
-                      {event.desc}
+                      {event.description}
                     </p>
-                    <div
-                      className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary/80 prose-strong:text-foreground prose-li:text-muted-foreground"
-                      dangerouslySetInnerHTML={{ __html: event.fullDescription || `<p>${event.desc}</p>` }}
-                    />
+                    {event.fullDescription && (
+                      <div
+                        className="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-foreground prose-p:text-muted-foreground prose-a:text-primary hover:prose-a:text-primary/80 prose-strong:text-foreground prose-li:text-muted-foreground"
+                        dangerouslySetInnerHTML={{ __html: event.fullDescription }}
+                      />
+                    )}
                   </div>
 
                   {/* Schedule */}
@@ -384,17 +270,19 @@ const EventDetail = () => {
                     <div className="flex items-center gap-4">
                       <Avatar className="w-12 h-12">
                         <AvatarFallback className="bg-primary/20 text-primary">
-                          {event.organizer.name.split(" ").map((n) => n[0]).join("")}
+                          {event.organizer?.name?.split(" ").map((n) => n[0]).join("") || "P"}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
-                        <p className="font-medium">{event.organizer.name}</p>
-                        <a
-                          href={`mailto:${event.organizer.email}`}
-                          className="text-sm text-primary hover:underline"
-                        >
-                          {event.organizer.email}
-                        </a>
+                        <p className="font-medium">{event.organizer?.name || "PrideVoice"}</p>
+                        {event.organizer?.email && (
+                          <a
+                            href={`mailto:${event.organizer.email}`}
+                            className="text-sm text-primary hover:underline"
+                          >
+                            {event.organizer.email}
+                          </a>
+                        )}
                       </div>
                       <Button variant="outline" size="sm">
                         <ExternalLink size={14} className="mr-2" />
@@ -438,13 +326,13 @@ const EventDetail = () => {
                       <div className="flex items-center justify-between text-sm mb-2">
                         <span className="text-muted-foreground">Capacity</span>
                         <span className="font-medium">
-                          {event.attendees} / {event.maxAttendees}
+                          {event.currentAttendees} / {event.maxAttendees}
                         </span>
                       </div>
                       <div className="h-2 rounded-full bg-muted overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
-                          animate={{ width: `${(event.attendees / event.maxAttendees) * 100}%` }}
+                          animate={{ width: `${(event.currentAttendees / event.maxAttendees) * 100}%` }}
                           transition={{ delay: 0.6, duration: 1 }}
                           className="h-full pride-gradient rounded-full"
                         />
@@ -452,26 +340,18 @@ const EventDetail = () => {
                     </div>
                   )}
 
-                  <Button
-                    className="w-full btn-pride"
-                    size="lg"
-                    onClick={handleRegister}
-                    disabled={isSoldOut || isRegistering}
-                  >
-                    {isRegistering ? (
-                      <>
-                        <Loader2 size={18} className="mr-2 animate-spin" />
-                        Processing...
-                      </>
-                    ) : isSoldOut ? (
-                      "Sold Out - Join Waitlist"
-                    ) : (
-                      <>
+                  {event.registrationOpen && !isSoldOut ? (
+                    <EventRegistrationModal event={event}>
+                      <Button className="w-full btn-pride" size="lg">
                         <Ticket size={18} className="mr-2" />
                         {event.isFree ? "Register Now" : `Pay ₹${event.price} & Register`}
-                      </>
-                    )}
-                  </Button>
+                      </Button>
+                    </EventRegistrationModal>
+                  ) : (
+                    <Button className="w-full btn-pride" size="lg" disabled>
+                      {isSoldOut ? "Sold Out - Join Waitlist" : "Registration Closed"}
+                    </Button>
+                  )}
 
                   <p className="text-xs text-center text-muted-foreground mt-4">
                     By registering, you agree to our terms and conditions. Cancellation available up to 48 hours before event.
@@ -499,6 +379,9 @@ const EventDetail = () => {
                     <div>
                       <p className="font-medium">Date</p>
                       <p className="text-sm text-muted-foreground">{event.date}</p>
+                      {event.endDate && (
+                        <p className="text-sm text-muted-foreground">to {event.endDate}</p>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -506,6 +389,9 @@ const EventDetail = () => {
                     <div>
                       <p className="font-medium">Time</p>
                       <p className="text-sm text-muted-foreground">{event.time}</p>
+                      {event.endTime && (
+                        <p className="text-sm text-muted-foreground">to {event.endTime}</p>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -513,6 +399,9 @@ const EventDetail = () => {
                     <div>
                       <p className="font-medium">Location</p>
                       <p className="text-sm text-muted-foreground">{event.location}</p>
+                      {event.isOnline && (
+                        <Badge variant="outline" className="mt-1">Online Event</Badge>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -520,124 +409,50 @@ const EventDetail = () => {
                     <div>
                       <p className="font-medium">Attendees</p>
                       <p className="text-sm text-muted-foreground">
-                        {event.attendees.toLocaleString()}
-                        {event.maxAttendees && ` / ${event.maxAttendees.toLocaleString()}`}
+                        {event.currentAttendees} registered
+                        {event.maxAttendees && ` of ${event.maxAttendees}`}
                       </p>
                     </div>
                   </div>
                 </div>
-
-                <div className="mt-6 pt-6 border-t border-border/50">
-                  <Button variant="outline" className="w-full" size="sm">
-                    <Calendar size={14} className="mr-2" />
-                    Add to Calendar
-                  </Button>
-                </div>
               </motion.div>
 
               {/* Related Events */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className="glass rounded-2xl p-6"
-              >
-                <h3 className="font-heading font-bold mb-4 flex items-center gap-2">
-                  <span className="w-1.5 h-6 bg-primary rounded-full" />
-                  Similar Events
-                </h3>
-                <div className="space-y-4">
-                  {relatedEvents.map((relatedEvent, i) => (
-                    <motion.article
-                      key={relatedEvent.id}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.5 + i * 0.1 }}
-                      onClick={() => navigate(`/events/${relatedEvent.id}`)}
-                      className="group cursor-pointer"
-                    >
-                      <Badge variant="outline" className="mb-2 text-xs">
-                        {relatedEvent.tags[0]}
-                      </Badge>
-                      <h4 className="font-medium mb-1 group-hover:text-primary transition-colors line-clamp-2">
-                        {relatedEvent.title}
-                      </h4>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Calendar size={10} />
-                        {relatedEvent.date}
+              {relatedEvents.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="glass rounded-2xl p-6"
+                >
+                  <h3 className="font-heading font-bold mb-4">Related Events</h3>
+                  <div className="space-y-4">
+                    {relatedEvents.map((relatedEvent) => (
+                      <div
+                        key={relatedEvent.id}
+                        className="flex gap-3 cursor-pointer group"
+                        onClick={() => navigate(`/events/${relatedEvent.slug || relatedEvent.id}`)}
+                      >
+                        <div className="w-16 h-16 rounded-lg pride-gradient-subtle flex items-center justify-center shrink-0">
+                          <Calendar size={24} className="text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm group-hover:text-primary transition-colors line-clamp-1">
+                            {relatedEvent.title}
+                          </p>
+                          <p className="text-xs text-muted-foreground line-clamp-1">
+                            {relatedEvent.date}
+                          </p>
+                        </div>
                       </div>
-                    </motion.article>
-                  ))}
-                </div>
-              </motion.div>
-
-              {/* Upcoming Events */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="glass rounded-2xl p-6"
-              >
-                <h3 className="font-heading font-bold mb-4 flex items-center gap-2">
-                  <span className="w-1.5 h-6 bg-primary rounded-full" />
-                  More Events
-                </h3>
-                <div className="space-y-3">
-                  {upcomingEvents.map((upcomingEvent, i) => (
-                    <motion.div
-                      key={upcomingEvent.id}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.7 + i * 0.1 }}
-                      onClick={() => navigate(`/events/${upcomingEvent.id}`)}
-                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors group"
-                    >
-                      <div className="w-12 h-12 rounded-lg pride-gradient-subtle flex items-center justify-center shrink-0">
-                        <Calendar size={16} className="text-primary/50" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-medium group-hover:text-primary transition-colors line-clamp-1">
-                          {upcomingEvent.title}
-                        </h4>
-                        <p className="text-xs text-muted-foreground">{upcomingEvent.date}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
             </aside>
           </div>
         </div>
       </AnimatedSection>
-
-      {/* Navigation Footer */}
-      <section className="py-12 border-t border-border/50">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <motion.button
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              onClick={() => navigate("/events")}
-              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ArrowLeft size={18} />
-              <span>Back to Events</span>
-            </motion.button>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="flex items-center gap-4"
-            >
-              <SocialShareButtons
-                title={event.title}
-                description={event.desc}
-                showLabel={false}
-                size="icon"
-              />
-            </motion.div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };

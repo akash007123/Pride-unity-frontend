@@ -6,9 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Eye, EyeOff, User, Mail, Phone, Lock, Calendar, MapPin, Upload } from 'lucide-react';
+import { Eye, EyeOff, User, Mail, Phone, Lock, Upload } from 'lucide-react';
 
 const AdminRegister: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -18,13 +17,6 @@ const AdminRegister: React.FC = () => {
     mobile: '',
     password: '',
     confirmPassword: '',
-    dateOfBirth: '',
-    gender: '' as 'male' | 'female' | 'other' | 'prefer_not_to_say' | '',
-    street: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    country: '',
     profilePic: '',
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -37,10 +29,6 @@ const AdminRegister: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -72,6 +60,11 @@ const AdminRegister: React.FC = () => {
       return;
     }
 
+    if (!formData.name || !formData.email || !formData.username || !formData.mobile) {
+      setError('All fields are required');
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -82,15 +75,6 @@ const AdminRegister: React.FC = () => {
         mobile: formData.mobile,
         password: formData.password,
         confirmPassword: formData.confirmPassword,
-        dateOfBirth: formData.dateOfBirth,
-        gender: formData.gender as 'male' | 'female' | 'other' | 'prefer_not_to_say',
-        address: {
-          street: formData.street,
-          city: formData.city,
-          state: formData.state,
-          postalCode: formData.postalCode,
-          country: formData.country,
-        },
         profilePic: formData.profilePic,
       });
       toast.success('Registration successful! Welcome to the Admin Portal');
@@ -105,7 +89,7 @@ const AdminRegister: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 p-4 py-8">
-      <Card className="w-full max-w-2xl mx-auto shadow-2xl">
+      <Card className="w-full max-w-lg mx-auto shadow-2xl">
         <CardHeader className="space-y-1 text-center">
           <CardTitle className="text-2xl font-bold text-purple-900">Admin Registration</CardTitle>
           <CardDescription>
@@ -148,7 +132,7 @@ const AdminRegister: React.FC = () => {
             </div>
 
             {/* Personal Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name *</Label>
                 <div className="relative">
@@ -211,44 +195,10 @@ const AdminRegister: React.FC = () => {
                   />
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="dateOfBirth">Date of Birth *</Label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <Input
-                    id="dateOfBirth"
-                    name="dateOfBirth"
-                    type="date"
-                    value={formData.dateOfBirth}
-                    onChange={handleChange}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="gender">Gender *</Label>
-                <Select
-                  value={formData.gender}
-                  onValueChange={(value) => handleSelectChange('gender', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                    <SelectItem value="prefer_not_to_say">Prefer not to say</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
             </div>
 
             {/* Password */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="password">Password *</Label>
                 <div className="relative">
@@ -289,47 +239,6 @@ const AdminRegister: React.FC = () => {
                     required
                   />
                 </div>
-              </div>
-            </div>
-
-            {/* Address */}
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                Address
-              </Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Input
-                  name="street"
-                  placeholder="Street address"
-                  value={formData.street}
-                  onChange={handleChange}
-                />
-                <Input
-                  name="city"
-                  placeholder="City"
-                  value={formData.city}
-                  onChange={handleChange}
-                />
-                <Input
-                  name="state"
-                  placeholder="State/Province"
-                  value={formData.state}
-                  onChange={handleChange}
-                />
-                <Input
-                  name="postalCode"
-                  placeholder="Postal code"
-                  value={formData.postalCode}
-                  onChange={handleChange}
-                />
-                <Input
-                  name="country"
-                  placeholder="Country"
-                  value={formData.country}
-                  onChange={handleChange}
-                  className="md:col-span-2"
-                />
               </div>
             </div>
 

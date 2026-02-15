@@ -4,13 +4,13 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // Get API URL from environment, default to localhost for development
-const apiUrl = process.env.VITE_API_URL || "http://localhost:5000";
+const apiUrl = process.env.VITE_API_URL || "http://localhost:8080";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
-    port: 8080,
+    port: 5173,
     hmr: {
       overlay: false,
     },

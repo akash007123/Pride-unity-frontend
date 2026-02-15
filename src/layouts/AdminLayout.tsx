@@ -37,7 +37,8 @@ import {
   Mail,
   FileText,
   BarChart3,
-  UserPlus
+  UserPlus,
+  Calendar
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
@@ -73,6 +74,12 @@ const adminNavItems = [
     href: '/admin/volunteer',
     icon: UserPlus,
     badge: 'new',
+  },
+  {
+    title: 'Events',
+    href: '/admin/events',
+    icon: Calendar,
+    badge: null,
   },
   {
     title: 'Users',

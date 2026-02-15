@@ -4,7 +4,6 @@ import {
   Calendar,
   MapPin,
   Clock,
-  Users,
   Ticket,
   Check,
   Loader2,
@@ -23,27 +22,11 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-
-interface EventDetails {
-  id: string;
-  title: string;
-  date: string;
-  time: string;
-  location: string;
-  description: string;
-  organizer: {
-    name: string;
-    avatar?: string;
-  };
-  attendees: number;
-  maxAttendees: number;
-  price: number;
-  isFree: boolean;
-  tags: string[];
-}
+import { eventApi, Event } from "@/services/eventApi";
+import { toast } from "sonner";
 
 interface EventRegistrationModalProps {
-  event: EventDetails;
+  event: Event;
   children: React.ReactNode;
 }
 
@@ -52,7 +35,7 @@ export const EventRegistrationModal = ({
   children,
 }: EventRegistrationModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [step, setStep] = useState<"details" | "confirm" | "ticket">("details");
+  const [step, setStep] = useState<"details" | "ticket">("details");
   const [isProcessing, setIsProcessing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -61,22 +44,33 @@ export const EventRegistrationModal = ({
     phone: "",
     accessibilityNeeds: "",
   });
+  const [ticketId, setTicketId] = useState<string | null>(null);
 
-  const spotsLeft = event.maxAttendees - event.attendees;
-  const isSoldOut = spotsLeft <= 0;
+  const spotsLeft = event.spotsLeft;
+  const isSoldOut = event.isSoldOut || false;
 
   const handleRegister = async () => {
     setIsProcessing(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsProcessing(false);
-    setStep("ticket");
+    try {
+      const response = await eventApi.registerForEvent(event.id, {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        accessibilityNeeds: formData.accessibilityNeeds || undefined,
+      });
+      
+      if (response.data.ticketId) {
+        setTicketId(response.data.ticketId);
+      }
+      setStep("ticket");
+      toast.success(response.message || "Registration successful!");
+    } catch (error: any) {
+      toast.error(error.message || "Registration failed. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
-
-  const generateTicketId = () => {
-    return `PV-${event.id}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-  };
-
-  const [ticketId] = useState(generateTicketId());
 
   const resetModal = () => {
     setStep("details");
@@ -87,6 +81,7 @@ export const EventRegistrationModal = ({
       phone: "",
       accessibilityNeeds: "",
     });
+    setTicketId(null);
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -119,7 +114,7 @@ export const EventRegistrationModal = ({
                 </button>
 
                 <div className="flex items-center gap-2 mb-2">
-                  {event.tags.map((tag) => (
+                  {event.tags?.map((tag) => (
                     <Badge key={tag} variant="secondary" className="text-xs">
                       {tag}
                     </Badge>
@@ -229,9 +224,11 @@ export const EventRegistrationModal = ({
                       {event.isFree ? "Free Event" : `₹${event.price.toFixed(2)}`}
                     </span>
                   </div>
-                  <span className="text-sm text-muted-foreground">
-                    {spotsLeft} spots left
-                  </span>
+                  {spotsLeft !== null && (
+                    <span className="text-sm text-muted-foreground">
+                      {isSoldOut ? "Sold Out" : `${spotsLeft} spots left`}
+                    </span>
+                  )}
                 </div>
 
                 <Button
@@ -242,16 +239,17 @@ export const EventRegistrationModal = ({
                     isSoldOut ||
                     !formData.firstName ||
                     !formData.lastName ||
-                    !formData.email
+                    !formData.email ||
+                    isProcessing
                   }
                 >
-                  {isSoldOut ? (
-                    "Sold Out"
-                  ) : isProcessing ? (
+                  {isProcessing ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                       Processing...
                     </>
+                  ) : isSoldOut ? (
+                    "Sold Out"
                   ) : event.isFree ? (
                     "Register Free"
                   ) : (
@@ -295,14 +293,14 @@ export const EventRegistrationModal = ({
                 <div className="flex items-center gap-4 mb-4">
                   <Avatar className="w-12 h-12">
                     <AvatarFallback className="bg-primary/20 text-primary">
-                      {event.organizer.name
-                        .split(" ")
+                      {event.organizer?.name
+                        ?.split(" ")
                         .map((n) => n[0])
-                        .join("")}
+                        .join("") || "P"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="text-left">
-                    <p className="font-medium">{event.organizer.name}</p>
+                    <p className="font-medium">{event.organizer?.name || "PrideVoice"}</p>
                     <p className="text-sm text-muted-foreground">Organizer</p>
                   </div>
                 </div>

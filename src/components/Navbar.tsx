@@ -13,7 +13,7 @@ const navLinks = [
   { path: "/my-story", label: "My Story" },
   { path: "/resources", label: "Resources" },
   { path: "/community", label: "Community" },
-  // { path: "/events", label: "Events" },
+  { path: "/events", label: "Events" },
   // { path: "/blog", label: "Blog" },
   { path: "/faq", label: "FAQ" },
   { path: "/contact", label: "Contact" },
@@ -50,7 +50,7 @@ export const Navbar = () => {
           ))}
           <div className="ml-2 pl-2 border-l border-border flex items-center gap-1">
             <GlobalSearch />
-            <LanguageSelector />
+            {/* <LanguageSelector /> */}
             <DonationModal />
           </div>
         </div>

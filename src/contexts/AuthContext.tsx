@@ -30,15 +30,6 @@ interface RegisterData {
   mobile: string;
   password: string;
   confirmPassword: string;
-  dateOfBirth: string;
-  gender: 'male' | 'female' | 'other' | 'prefer_not_to_say';
-  address?: {
-    street?: string;
-    city?: string;
-    state?: string;
-    postalCode?: string;
-    country?: string;
-  };
   profilePic?: string;
   role?: 'admin' | 'sub_admin' | 'manager';
 }

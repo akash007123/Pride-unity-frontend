@@ -30,6 +30,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminContacts from "./pages/AdminContacts";
 import AdminCommunity from "./pages/AdminCommunity";
 import AdminVolunteers from "./pages/AdminVolunteers";
+import AdminEvents from "./pages/AdminEvents";
 import AdminLogin from "./pages/AdminLogin";
 import AdminRegister from "./pages/AdminRegister";
 
@@ -93,6 +94,7 @@ const App = () => (
                 <Route path="admin/contacts" element={<AdminContacts />} />
                 <Route path="admin/community" element={<AdminCommunity />} />
                 <Route path="admin/volunteer" element={<AdminVolunteers />} />
+                <Route path="admin/events" element={<AdminEvents />} />
               </Route>
             </Routes>
           </BrowserRouter>

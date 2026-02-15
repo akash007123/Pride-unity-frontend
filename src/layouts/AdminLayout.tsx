@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Sidebar,
+import { 
+  Sidebar, 
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
@@ -14,6 +14,7 @@ import {
   SidebarMenuItem,
   SidebarMenuBadge,
   SidebarSeparator,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import {
   DropdownMenu,
@@ -127,6 +128,7 @@ function AdminSidebar() {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const [isHovered, setIsHovered] = useState(false);
+  const { open, setOpen, toggleSidebar } = useSidebar();
   
   const { data: stats } = useQuery({
     queryKey: ['contactStats'],
@@ -596,6 +598,7 @@ export function AdminLayout() {
   const { admin, logout } = useAuth();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { open, setOpen, toggleSidebar } = useSidebar();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -643,7 +646,7 @@ export function AdminLayout() {
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Desktop sidebar */}
+      {/* Desktop sidebar with collapsible state */}
       <div className="hidden md:block">
         <AdminSidebar />
       </div>
@@ -683,6 +686,25 @@ export function AdminLayout() {
             </div>
 
             <div className="flex items-center gap-2">
+              {/* Sidebar Toggle Button */}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-9 w-9"
+                      onClick={toggleSidebar}
+                    >
+                      {open ? <Minimize2 className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{open ? 'Close Sidebar' : 'Open Sidebar'}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
               {/* Quick Actions Toolbar */}
               <div className="hidden md:flex items-center gap-1 mr-2">
                 <TooltipProvider>

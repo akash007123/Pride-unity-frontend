@@ -10,7 +10,7 @@ export interface Admin {
   username: string;
   mobile: string;
   profilePic: string;
-  role: 'admin' | 'sub_admin' | 'manager';
+  role: 'Admin' | 'Sub Admin' | 'Volunteer' | 'Member';
   isActive: boolean;
   lastLogin?: string;
   createdAt?: string;
@@ -29,6 +29,7 @@ export interface RegisterData {
   password: string;
   confirmPassword: string;
   profilePic?: string;
+  role?: 'Admin' | 'Sub Admin' | 'Volunteer' | 'Member';
 }
 
 export interface UpdateProfileData {
@@ -123,6 +124,11 @@ export const authApi = {
     return fetchApi('/api/auth/logout', {
       method: 'POST',
     });
+  },
+
+  // Get all admins
+  getAllAdmins: async (): Promise<{ success: boolean; data: { admins: Admin[] } }> => {
+    return fetchApi('/api/auth/admins');
   },
 };
 

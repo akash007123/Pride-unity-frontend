@@ -34,6 +34,7 @@ import AdminEvents from "./pages/AdminEvents";
 import AdminEventRegistrations from "./pages/AdminEventRegistrations";
 import AdminLogin from "./pages/AdminLogin";
 import AdminRegister from "./pages/AdminRegister";
+import AdminUsers from "./pages/AdminUsers";
 
 const queryClient = new QueryClient();
 
@@ -97,6 +98,7 @@ const App = () => (
                 <Route path="admin/volunteer" element={<AdminVolunteers />} />
                 <Route path="admin/events" element={<AdminEvents />} />
                 <Route path="admin/events/:id/registrations" element={<AdminEventRegistrations />} />
+                <Route path="admin/users" element={<AdminUsers />} />
               </Route>
             </Routes>
           </BrowserRouter>

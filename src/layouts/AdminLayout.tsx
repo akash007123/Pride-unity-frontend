@@ -77,6 +77,13 @@ const adminNavItems = [
     color: 'from-blue-500 to-cyan-500'
   },
   {
+    title: 'Users',
+    href: '/admin/users',
+    icon: Shield,
+    badge: null,
+    color: 'from-red-500 to-orange-500'
+  },
+  {
     title: 'Contacts',
     href: '/admin/contacts',
     icon: Mail,
@@ -378,7 +385,7 @@ function AdminSidebar() {
                   <span className="font-medium">{admin?.name || 'Admin User'}</span>
                   <span className="text-xs text-muted-foreground">{admin?.email || 'admin@pride.com'}</span>
                   <Badge variant="outline" className="mt-1 w-fit text-xs">
-                    {admin?.role?.replace('_', ' ') || 'Super Admin'}
+                    {admin?.role || 'Member'}
                   </Badge>
                 </div>
               </DropdownMenuLabel>
@@ -821,7 +828,7 @@ export function AdminLayout() {
                           {admin?.email || 'admin@pride.com'}
                         </p>
                         <Badge variant="outline" className="mt-1 w-fit text-xs">
-                          {admin?.role?.replace('_', ' ') || 'Super Admin'}
+                          {admin?.role || 'Member'}
                         </Badge>
                       </div>
                     </DropdownMenuLabel>

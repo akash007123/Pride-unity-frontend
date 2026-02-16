@@ -8,6 +8,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
 import { Eye, EyeOff, User, Mail, Phone, Lock, Upload } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const AdminRegister: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +25,7 @@ const AdminRegister: React.FC = () => {
     password: '',
     confirmPassword: '',
     profilePic: '',
+    role: 'Member',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,6 +38,10 @@ const AdminRegister: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleRoleChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, role: value }));
   };
 
   const handleProfilePicChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,6 +88,7 @@ const AdminRegister: React.FC = () => {
         password: formData.password,
         confirmPassword: formData.confirmPassword,
         profilePic: formData.profilePic,
+        role: formData.role,
       });
       toast.success('Registration successful! Welcome to the Admin Portal');
       navigate('/admin');
@@ -194,6 +207,21 @@ const AdminRegister: React.FC = () => {
                     required
                   />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="role">Role *</Label>
+                <Select value={formData.role} onValueChange={handleRoleChange}>
+                  <SelectTrigger id="role" className="w-full">
+                    <SelectValue placeholder="Select a role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Admin">Admin</SelectItem>
+                    <SelectItem value="Sub Admin">Sub Admin</SelectItem>
+                    <SelectItem value="Volunteer">Volunteer</SelectItem>
+                    <SelectItem value="Member">Member</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 

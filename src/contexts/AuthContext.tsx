@@ -7,7 +7,7 @@ interface Admin {
   username: string;
   mobile: string;
   profilePic: string;
-  role: 'admin' | 'sub_admin' | 'manager';
+  role: 'Admin' | 'Sub Admin' | 'Volunteer' | 'Member';
   isActive: boolean;
   lastLogin?: string;
 }
@@ -31,7 +31,7 @@ interface RegisterData {
   password: string;
   confirmPassword: string;
   profilePic?: string;
-  role?: 'admin' | 'sub_admin' | 'manager';
+  role?: 'Admin' | 'Sub Admin' | 'Volunteer' | 'Member';
 }
 
 interface AuthResponse {

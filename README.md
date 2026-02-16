@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Pride Community Frontend
 
 A modern React application for the Pride community platform, built with TypeScript, Vite, and Tailwind CSS.
@@ -58,3 +59,6 @@ npm run preview
 ## License
 
 MIT
+=======
+
+>>>>>>> origin/main

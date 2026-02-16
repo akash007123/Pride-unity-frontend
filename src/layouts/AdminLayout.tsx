@@ -54,7 +54,8 @@ import {
   HelpCircle,
   Keyboard,
   Maximize2,
-  Minimize2
+  Minimize2,
+  CircleUser
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
@@ -110,6 +111,13 @@ const adminNavItems = [
     icon: Calendar,
     badge: null,
     color: 'from-red-500 to-rose-500'
+  },
+  {
+    title: 'All Users',
+    href: '/admin/all-users',
+    icon: CircleUser,
+    badge: null,
+    color: 'from-violet-500 to-purple-500'
   },
   {
     title: 'Reports',

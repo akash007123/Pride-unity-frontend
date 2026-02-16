@@ -102,12 +102,12 @@ const AdminLogin: React.FC = () => {
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
-          <div className="text-sm text-gray-500 text-center">
+          {/* <div className="text-sm text-gray-500 text-center">
             Need access?{' '}
             <Link to="/admin/register" className="text-purple-600 hover:text-purple-700 font-medium">
               Request access
             </Link>
-          </div>
+          </div> */}
           <div className="text-xs text-gray-400 text-center mt-2">
             Restricted to authorized personnel only
           </div>

@@ -25,6 +25,7 @@ export interface CommunityStats {
 }
 
 export interface PaginatedCommunityMembers {
+  success?: boolean;
   data: CommunityMember[];
   pagination: {
     page: number;

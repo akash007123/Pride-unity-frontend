@@ -130,6 +130,53 @@ export const authApi = {
   getAllAdmins: async (): Promise<{ success: boolean; data: { admins: Admin[] } }> => {
     return fetchApi('/api/auth/admins');
   },
+
+  // Get admin by ID
+  getAdminById: async (id: string): Promise<{ success: boolean; data: { admin: Admin } }> => {
+    return fetchApi(`/api/auth/admins/${id}`);
+  },
+
+  // Update admin (supports file upload for profile pic)
+  updateAdmin: async (id: string, data: { name?: string; mobile?: string; role?: string; isActive?: boolean; newPassword?: string }, profilePicFile?: File): Promise<{ success: boolean; message: string; data: { admin: Admin } }> => {
+    const formData = new FormData();
+    
+    if (data.name) formData.append('name', data.name);
+    if (data.mobile) formData.append('mobile', data.mobile);
+    if (data.role) formData.append('role', data.role);
+    if (data.isActive !== undefined) formData.append('isActive', String(data.isActive));
+    if (data.newPassword) formData.append('newPassword', data.newPassword);
+    if (profilePicFile) formData.append('profilePic', profilePicFile);
+
+    const token = localStorage.getItem('adminToken');
+    const response = await fetch(`${API_URL}/api/auth/admins/${id}`, {
+      method: 'PUT',
+      body: formData,
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: 'An error occurred' }));
+      throw new Error(error.message || 'An error occurred');
+    }
+
+    return response.json();
+  },
+
+  // Toggle admin status
+  toggleAdminStatus: async (id: string): Promise<{ success: boolean; message: string; data: { admin: Admin } }> => {
+    return fetchApi(`/api/auth/admins/${id}/toggle-status`, {
+      method: 'PUT',
+    });
+  },
+
+  // Delete admin
+  deleteAdmin: async (id: string): Promise<{ success: boolean; message: string }> => {
+    return fetchApi(`/api/auth/admins/${id}`, {
+      method: 'DELETE',
+    });
+  },
 };
 
 export default authApi;

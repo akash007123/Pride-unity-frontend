@@ -25,6 +25,7 @@ export interface ContactStats {
 }
 
 export interface PaginatedContacts {
+  success?: boolean;
   data: Contact[];
   pagination: {
     page: number;

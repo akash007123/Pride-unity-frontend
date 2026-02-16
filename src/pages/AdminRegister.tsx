@@ -16,8 +16,23 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+// Define the allowed role types
+type AdminRole = 'Admin' | 'Sub Admin' | 'Volunteer' | 'Member';
+
+// Form data type
+interface AdminRegisterFormData {
+  name: string;
+  email: string;
+  username: string;
+  mobile: string;
+  password: string;
+  confirmPassword: string;
+  profilePic: string;
+  role: AdminRole;
+}
+
 const AdminRegister: React.FC = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AdminRegisterFormData>({
     name: '',
     email: '',
     username: '',
@@ -40,7 +55,7 @@ const AdminRegister: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleRoleChange = (value: string) => {
+  const handleRoleChange = (value: AdminRole) => {
     setFormData((prev) => ({ ...prev, role: value }));
   };
 

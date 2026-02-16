@@ -33,6 +33,7 @@ export interface VolunteerStats {
 }
 
 export interface PaginatedVolunteers {
+  success?: boolean;
   data: Volunteer[];
   pagination: {
     page: number;

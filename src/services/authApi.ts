@@ -1,6 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Admin types
 export interface Admin {
@@ -83,7 +83,7 @@ async function fetchApi<T>(url: string, options?: RequestInit): Promise<T> {
 export const authApi = {
   // Login
   login: async (credentials: LoginCredentials): Promise<{ success: boolean; data: { admin: Admin; token: string } }> => {
-    return fetchApi('/auth/login', {
+    return fetchApi('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
@@ -91,7 +91,7 @@ export const authApi = {
 
   // Register
   register: async (data: RegisterData): Promise<{ success: boolean; data: { admin: Admin; token: string } }> => {
-    return fetchApi('/auth/register', {
+    return fetchApi('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify(data),
     });
@@ -99,12 +99,12 @@ export const authApi = {
 
   // Get current admin profile
   getProfile: async (): Promise<{ success: boolean; data: { admin: Admin } }> => {
-    return fetchApi('/auth/profile');
+    return fetchApi('/api/auth/profile');
   },
 
   // Update profile
   updateProfile: async (data: UpdateProfileData): Promise<{ success: boolean; data: { admin: Admin } }> => {
-    return fetchApi('/auth/profile', {
+    return fetchApi('/api/auth/profile', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
@@ -112,7 +112,7 @@ export const authApi = {
 
   // Change password
   changePassword: async (data: ChangePasswordData): Promise<{ success: boolean; message: string }> => {
-    return fetchApi('/auth/password', {
+    return fetchApi('/api/auth/password', {
       method: 'PUT',
       body: JSON.stringify(data),
     });
@@ -120,7 +120,7 @@ export const authApi = {
 
   // Logout
   logout: async (): Promise<{ success: boolean; message: string }> => {
-    return fetchApi('/auth/logout', {
+    return fetchApi('/api/auth/logout', {
       method: 'POST',
     });
   },

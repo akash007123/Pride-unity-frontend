@@ -284,10 +284,10 @@ const EventDetail = () => {
                           </a>
                         )}
                       </div>
-                      <Button variant="outline" size="sm">
+                      {/* <Button variant="outline" size="sm">
                         <ExternalLink size={14} className="mr-2" />
                         View Profile
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 </div>

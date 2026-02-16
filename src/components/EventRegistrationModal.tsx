@@ -95,7 +95,7 @@ export const EventRegistrationModal = ({
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <AnimatePresence mode="wait">
           {step === "details" && (
             <motion.div
@@ -110,7 +110,7 @@ export const EventRegistrationModal = ({
                   onClick={() => setIsOpen(false)}
                   className="absolute top-4 right-4 p-1 rounded-full bg-background/80 hover:bg-background"
                 >
-                  <X size={16} />
+                  {/* <X size={16} /> */}
                 </button>
 
                 <div className="flex items-center gap-2 mb-2">
@@ -193,7 +193,7 @@ export const EventRegistrationModal = ({
                   <Input
                     id="phone"
                     type="tel"
-                    placeholder="+1 (555) 000-0000"
+                    placeholder="+91 (999) 999-9999"
                     value={formData.phone}
                     onChange={(e) =>
                       setFormData({ ...formData, phone: e.target.value })

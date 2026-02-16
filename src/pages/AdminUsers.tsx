@@ -8,40 +8,17 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Search, Plus, MoreHorizontal, Shield, ShieldAlert, UserPlus, Users, Eye, Pencil, Trash2, ToggleLeft, ToggleRight, X, Lock } from 'lucide-react';
+import { Search, Plus, MoreHorizontal, Shield, ShieldAlert, UserPlus, Users, Eye, Pencil, Trash2, ToggleLeft, ToggleRight } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { toast } from 'sonner';
+import ViewProfileModal from '@/components/admin/ViewProfileModal';
+import EditUserModal from '@/components/admin/EditUserModal';
+import DeleteUserModal from '@/components/admin/DeleteUserModal';
 
 const roleColors: Record<string, string> = {
   'Admin': 'bg-red-100 text-red-800 hover:bg-red-200',
@@ -333,14 +310,14 @@ const AdminUsers: React.FC = () => {
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium">
+                          <div className="font-medium">
                             {admin.name}
                             {admin.id === currentAdmin?.id && (
                               <Badge variant="outline" className="ml-2 text-xs">
                                 You
                               </Badge>
                             )}
-                          </p>
+                          </div>
                           <p className="text-sm text-muted-foreground">@{admin.username}</p>
                         </div>
                       </div>
@@ -437,202 +414,33 @@ const AdminUsers: React.FC = () => {
       </div>
 
       {/* View Profile Modal */}
-      <Dialog open={viewModalOpen} onOpenChange={setViewModalOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>User Profile</DialogTitle>
-            <DialogDescription>
-              View details of the selected admin user
-            </DialogDescription>
-          </DialogHeader>
-          {selectedUser && (
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <Avatar className="h-16 w-16">
-                  <AvatarImage src={selectedUser.profilePic} alt={selectedUser.name} />
-                  <AvatarFallback className="bg-primary/10 text-primary text-lg">
-                    {getInitials(selectedUser.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h3 className="text-lg font-semibold">{selectedUser.name}</h3>
-                  <p className="text-muted-foreground">@{selectedUser.username}</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <Label className="text-muted-foreground">Email</Label>
-                  <p className="font-medium">{selectedUser.email}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Mobile</Label>
-                  <p className="font-medium">{selectedUser.mobile}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Role</Label>
-                  <p className="font-medium">{selectedUser.role}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Status</Label>
-                  <Badge variant={selectedUser.isActive ? 'default' : 'secondary'}>
-                    {selectedUser.isActive ? 'Active' : 'Inactive'}
-                  </Badge>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Joined</Label>
-                  <p className="font-medium">
-                    {selectedUser.createdAt
-                      ? new Date(selectedUser.createdAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })
-                      : 'N/A'}
-                  </p>
-                </div>
-                {selectedUser.lastLogin && (
-                  <div>
-                    <Label className="text-muted-foreground">Last Login</Label>
-                    <p className="font-medium">
-                      {new Date(selectedUser.lastLogin).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setViewModalOpen(false)}>
-              Close
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ViewProfileModal
+        open={viewModalOpen}
+        onOpenChange={setViewModalOpen}
+        user={selectedUser}
+      />
 
       {/* Edit User Modal */}
-      <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Edit User</DialogTitle>
-            <DialogDescription>
-              Update the details of the selected admin user
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="edit-name">Name</Label>
-              <Input
-                id="edit-name"
-                value={editForm.name}
-                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-mobile">Mobile</Label>
-              <Input
-                id="edit-mobile"
-                value={editForm.mobile}
-                onChange={(e) => setEditForm({ ...editForm, mobile: e.target.value })}
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-profilePic">Profile Picture</Label>
-              <Input
-                id="edit-profilePic"
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0] || null;
-                  setProfilePicFile(file);
-                }}
-              />
-              {selectedUser?.profilePic && !profilePicFile && (
-                <p className="text-xs text-muted-foreground">
-                  Current: {selectedUser.profilePic}
-                </p>
-              )}
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-role">Role</Label>
-              <Select
-                value={editForm.role}
-                onValueChange={(value) => setEditForm({ ...editForm, role: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Admin">Admin</SelectItem>
-                  <SelectItem value="Sub Admin">Sub Admin</SelectItem>
-                  <SelectItem value="Volunteer">Volunteer</SelectItem>
-                  <SelectItem value="Member">Member</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-status">Status</Label>
-              <Select
-                value={editForm.status}
-                onValueChange={(value) => setEditForm({ ...editForm, status: value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Active">Active</SelectItem>
-                  <SelectItem value="Inactive">Inactive</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="edit-password">New Password</Label>
-              <Input
-                id="edit-password"
-                type="password"
-                value={editForm.newPassword}
-                onChange={(e) => setEditForm({ ...editForm, newPassword: e.target.value })}
-                placeholder="Enter new password (min 8 characters)"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSaveEdit} disabled={isProcessing}>
-              {isProcessing ? 'Saving...' : 'Save Changes'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <EditUserModal
+        open={editModalOpen}
+        onOpenChange={setEditModalOpen}
+        user={selectedUser}
+        form={editForm}
+        onFormChange={setEditForm}
+        profilePicFile={profilePicFile}
+        onProfilePicChange={setProfilePicFile}
+        isProcessing={isProcessing}
+        onSave={handleSaveEdit}
+      />
 
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Admin User</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete {selectedUser?.name}? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleConfirmDelete}
-              disabled={isProcessing}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              {isProcessing ? 'Deleting...' : 'Delete'}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      {/* Delete User Modal */}
+      <DeleteUserModal
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        user={selectedUser}
+        isProcessing={isProcessing}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 };

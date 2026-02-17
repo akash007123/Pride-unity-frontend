@@ -136,7 +136,6 @@ const adminNavItems: NavItem[] = [
     href: '/admin/reports',
     icon: BarChart3,
     badge: null,
-    disabled: true,
     color: 'from-indigo-500 to-purple-500',
     roles: ['Admin']
   },
@@ -145,7 +144,6 @@ const adminNavItems: NavItem[] = [
     href: '/admin/settings',
     icon: Settings,
     badge: null,
-    disabled: true,
     color: 'from-gray-500 to-slate-500',
     roles: ['Admin']
   },

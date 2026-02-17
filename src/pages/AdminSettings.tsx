@@ -250,19 +250,19 @@ const AdminSettings = () => {
       className="p-6 space-y-6"
     >
       {/* Header */}
-      <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
             Settings
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-muted-foreground mt-1 text-sm sm:text-base">
             Manage your application settings and preferences
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <Button 
             variant="outline" 
-            className="gap-2"
+            className="gap-2 h-9"
             onClick={() => seedMutation.mutate()}
             disabled={seedMutation.isPending}
           >
@@ -271,21 +271,21 @@ const AdminSettings = () => {
             ) : (
               <RotateCcw className="h-4 w-4" />
             )}
-            Reset Defaults
+            <span className="hidden sm:inline">Reset Defaults</span>
           </Button>
           <Button 
             variant="outline" 
-            className="gap-2"
+            className="gap-2 h-9"
             onClick={() => queryClient.invalidateQueries({ queryKey: ['adminSettings'] })}
           >
             <RefreshCw className="h-4 w-4" />
-            Refresh
+            <span className="hidden sm:inline">Refresh</span>
           </Button>
         </div>
       </motion.div>
 
       {/* Stats Cards */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <motion.div variants={itemVariants} className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {categoryStats.map((stat, index) => (
           <Card 
             key={index} 
@@ -310,12 +310,12 @@ const AdminSettings = () => {
       {/* Settings Tabs */}
       <motion.div variants={itemVariants}>
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
               <Settings className="h-5 w-5" />
               Configuration
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-sm">
               Customize and configure your application settings
             </CardDescription>
           </CardHeader>
@@ -326,28 +326,28 @@ const AdminSettings = () => {
               </div>
             ) : (
               <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="mb-4 flex flex-wrap h-auto">
-                  <TabsTrigger value="general" className="gap-2">
-                    <Settings className="h-4 w-4" />
-                    General
+                <TabsList className="mb-4 flex flex-wrap h-auto gap-1">
+                  <TabsTrigger value="general" className="gap-1.5 sm:gap-2 text-xs sm:text-sm">
+                    <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">General</span>
                   </TabsTrigger>
-                  <TabsTrigger value="notifications" className="gap-2">
-                    <Bell className="h-4 w-4" />
-                    Notifications
+                  <TabsTrigger value="notifications" className="gap-1.5 sm:gap-2 text-xs sm:text-sm">
+                    <Bell className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Notifications</span>
                   </TabsTrigger>
-                  <TabsTrigger value="security" className="gap-2">
-                    <Shield className="h-4 w-4" />
-                    Security
+                  <TabsTrigger value="security" className="gap-1.5 sm:gap-2 text-xs sm:text-sm">
+                    <Shield className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Security</span>
                   </TabsTrigger>
-                  <TabsTrigger value="appearance" className="gap-2">
-                    <Palette className="h-4 w-4" />
-                    Appearance
+                  <TabsTrigger value="appearance" className="gap-1.5 sm:gap-2 text-xs sm:text-sm">
+                    <Palette className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Appearance</span>
                   </TabsTrigger>
-                  <TabsTrigger value="integrations" className="gap-2">
-                    <Link className="h-4 w-4" />
-                    Integrations
+                  <TabsTrigger value="integrations" className="gap-1.5 sm:gap-2 text-xs sm:text-sm">
+                    <Link className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <span className="hidden sm:inline">Integrations</span>
                   </TabsTrigger>
-                  <TabsTrigger value="backup" className="gap-2">
+                  <TabsTrigger value="backup" className="gap-1.5 sm:gap-2 text-xs sm:text-sm">
                     <Database className="h-4 w-4" />
                     Backup
                   </TabsTrigger>

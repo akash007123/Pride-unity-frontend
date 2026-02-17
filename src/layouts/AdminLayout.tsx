@@ -69,55 +69,75 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { useTheme } from '@/hooks/useTheme';
 
-const adminNavItems = [
+// Type for admin roles
+type AdminRole = 'Admin' | 'Sub Admin' | 'Volunteer' | 'Member';
+
+interface NavItem {
+  title: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badge: string | null;
+  color: string;
+  disabled?: boolean;
+  roles?: AdminRole[];
+}
+
+const adminNavItems: NavItem[] = [
   {
     title: 'Dashboard',
     href: '/admin',
     icon: LayoutDashboard,
     badge: null,
-    color: 'from-blue-500 to-cyan-500'
+    color: 'from-blue-500 to-cyan-500',
+    roles: ['Admin', 'Sub Admin', 'Volunteer', 'Member']
   },
   {
     title: 'Users',
     href: '/admin/users',
     icon: Shield,
     badge: null,
-    color: 'from-red-500 to-orange-500'
+    color: 'from-red-500 to-orange-500',
+    roles: ['Admin']
   },
   {
     title: 'Contacts',
     href: '/admin/contacts',
     icon: Mail,
     badge: 'new',
-    color: 'from-purple-500 to-pink-500'
+    color: 'from-purple-500 to-pink-500',
+    roles: ['Admin', 'Sub Admin']
   },
   {
     title: 'Community',
     href: '/admin/community',
     icon: Users,
     badge: 'new',
-    color: 'from-green-500 to-emerald-500'
+    color: 'from-green-500 to-emerald-500',
+    roles: ['Admin', 'Sub Admin']
   },
   {
     title: 'Volunteer',
     href: '/admin/volunteer',
     icon: UserPlus,
     badge: 'new',
-    color: 'from-amber-500 to-orange-500'
+    color: 'from-amber-500 to-orange-500',
+    roles: ['Admin', 'Sub Admin']
   },
   {
     title: 'Events',
     href: '/admin/events',
     icon: Calendar,
     badge: null,
-    color: 'from-red-500 to-rose-500'
+    color: 'from-red-500 to-rose-500',
+    roles: ['Admin', 'Sub Admin', 'Volunteer']
   },
   // {
   //   title: 'All Users',
   //   href: '/admin/all-users',
   //   icon: CircleUser,
   //   badge: null,
-  //   color: 'from-violet-500 to-purple-500'
+  //   color: 'from-violet-500 to-purple-500',
+  //   roles: ['Admin']
   // },
   {
     title: 'Reports',
@@ -125,7 +145,8 @@ const adminNavItems = [
     icon: BarChart3,
     badge: null,
     disabled: true,
-    color: 'from-indigo-500 to-purple-500'
+    color: 'from-indigo-500 to-purple-500',
+    roles: ['Admin']
   },
   {
     title: 'Settings',
@@ -133,7 +154,8 @@ const adminNavItems = [
     icon: Settings,
     badge: null,
     disabled: true,
-    color: 'from-gray-500 to-slate-500'
+    color: 'from-gray-500 to-slate-500',
+    roles: ['Admin']
   },
 ];
 
@@ -203,7 +225,16 @@ function AdminSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {adminNavItems.map((item) => {
+              {adminNavItems
+                .filter((item) => {
+                  // If no roles specified, allow all
+                  if (!item.roles) return true;
+                  // Check if admin's role is in the allowed roles
+                  return item.roles.some(role => 
+                    (admin?.role || '').toLowerCase() === role.toLowerCase()
+                  );
+                })
+                .map((item) => {
                 const isActive = location.pathname === item.href || 
                   (item.href !== '/admin' && location.pathname.startsWith(item.href));
                 
@@ -534,7 +565,16 @@ function MobileSidebar() {
             </div>
             
             <SidebarMenu className="px-2">
-              {adminNavItems.map((item) => {
+              {adminNavItems
+                .filter((item) => {
+                  // If no roles specified, allow all
+                  if (!item.roles) return true;
+                  // Check if admin's role is in the allowed roles
+                  return item.roles.some(role => 
+                    (admin?.role || '').toLowerCase() === role.toLowerCase()
+                  );
+                })
+                .map((item) => {
                 const isActive = location.pathname === item.href || 
                   (item.href !== '/admin' && location.pathname.startsWith(item.href));
                 

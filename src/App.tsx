@@ -11,6 +11,7 @@ import { AdminLayout } from "@/layouts/AdminLayout";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import RoleRoute from "@/components/auth/RoleRoute";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import MyStory from "./pages/MyStory";
@@ -94,13 +95,13 @@ const App = () => (
                 }
               >
                 <Route path="/admin" index element={<AdminDashboard />} />
-                <Route path="admin/contacts" element={<AdminContacts />} />
-                <Route path="admin/community" element={<AdminCommunity />} />
-                <Route path="admin/volunteer" element={<AdminVolunteers />} />
-                <Route path="admin/events" element={<AdminEvents />} />
-                <Route path="admin/events/:id/registrations" element={<AdminEventRegistrations />} />
-                <Route path="admin/users" element={<AdminUsers />} />
-                <Route path="admin/all-users" element={<AdminAllUsers />} />
+                <Route path="admin/contacts" element={<RoleRoute allowedRoles={['Admin', 'Sub Admin']}><AdminContacts /></RoleRoute>} />
+                <Route path="admin/community" element={<RoleRoute allowedRoles={['Admin', 'Sub Admin']}><AdminCommunity /></RoleRoute>} />
+                <Route path="admin/volunteer" element={<RoleRoute allowedRoles={['Admin', 'Sub Admin']}><AdminVolunteers /></RoleRoute>} />
+                <Route path="admin/events" element={<RoleRoute allowedRoles={['Admin', 'Sub Admin', 'Volunteer']}><AdminEvents /></RoleRoute>} />
+                <Route path="admin/events/:id/registrations" element={<RoleRoute allowedRoles={['Admin', 'Sub Admin', 'Volunteer']}><AdminEventRegistrations /></RoleRoute>} />
+                <Route path="admin/users" element={<RoleRoute allowedRoles={['Admin']}><AdminUsers /></RoleRoute>} />
+                <Route path="admin/all-users" element={<RoleRoute allowedRoles={['Admin']}><AdminAllUsers /></RoleRoute>} />
               </Route>
             </Routes>
           </BrowserRouter>

@@ -131,14 +131,6 @@ const adminNavItems: NavItem[] = [
     color: 'from-red-500 to-rose-500',
     roles: ['Admin', 'Sub Admin', 'Volunteer']
   },
-  // {
-  //   title: 'All Users',
-  //   href: '/admin/all-users',
-  //   icon: CircleUser,
-  //   badge: null,
-  //   color: 'from-violet-500 to-purple-500',
-  //   roles: ['Admin']
-  // },
   {
     title: 'Reports',
     href: '/admin/reports',
@@ -188,7 +180,7 @@ function AdminSidebar() {
 
   return (
     <Sidebar 
-      className="border-r bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="border-r bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 h-screen sticky top-0"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -227,9 +219,7 @@ function AdminSidebar() {
             <SidebarMenu>
               {adminNavItems
                 .filter((item) => {
-                  // If no roles specified, allow all
                   if (!item.roles) return true;
-                  // Check if admin's role is in the allowed roles
                   return item.roles.some(role => 
                     (admin?.role || '').toLowerCase() === role.toLowerCase()
                   );
@@ -349,14 +339,6 @@ function AdminSidebar() {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              <SidebarMenuItem>
-                {/* <SidebarMenuButton asChild>
-                  <Link to="/admin/events/create" className="flex items-center group">
-                    <Calendar className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
-                    <span>Create Event</span>
-                  </Link>
-                </SidebarMenuButton> */}
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -458,7 +440,6 @@ function AdminSidebar() {
           </DropdownMenu>
         </motion.div>
 
-        {/* System Status */}
         <motion.div 
           className="mt-3 pt-3 border-t border-border/50"
           initial={{ opacity: 0 }}
@@ -567,9 +548,7 @@ function MobileSidebar() {
             <SidebarMenu className="px-2">
               {adminNavItems
                 .filter((item) => {
-                  // If no roles specified, allow all
                   if (!item.roles) return true;
-                  // Check if admin's role is in the allowed roles
                   return item.roles.some(role => 
                     (admin?.role || '').toLowerCase() === role.toLowerCase()
                   );
@@ -700,16 +679,17 @@ export function AdminLayout() {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Desktop sidebar with collapsible state */}
-      <div className="hidden md:block">
+    <div className="flex h-screen w-screen overflow-hidden bg-background">
+      {/* Desktop sidebar */}
+      <div className="hidden md:block h-full">
         <AdminSidebar />
       </div>
       
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      {/* Main content - takes full remaining space */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
+        {/* Header - Fixed height */}
         <motion.header 
-          className={`sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 transition-all duration-200 ${
+          className={`flex-none h-16 flex items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 transition-all duration-200 ${
             isScrolled ? 'shadow-lg' : ''
           }`}
           initial={{ y: -100 }}
@@ -913,10 +893,10 @@ export function AdminLayout() {
           </div>
         </motion.header>
 
-        {/* Page Content with Animated Transitions */}
+        {/* Page Content - Takes remaining space with scroll */}
         <main className="flex-1 overflow-auto">
           <motion.div 
-            className="container mx-auto p-4 md:p-6 lg:p-8 max-w-7xl"
+            className="min-h-full p-4 md:p-6 lg:p-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -928,14 +908,14 @@ export function AdminLayout() {
           </motion.div>
         </main>
 
-        {/* Footer */}
+        {/* Footer - Fixed height */}
         <motion.footer 
-          className="border-t py-4 px-4 md:px-6 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+          className="flex-none border-t py-4 px-4 md:px-6 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <div className="container mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-center gap-2">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-2">
             <p className="text-xs text-muted-foreground">
               © 2024 Pride Admin Panel. All rights reserved.
             </p>

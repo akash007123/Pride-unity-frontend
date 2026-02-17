@@ -14,6 +14,15 @@ export interface Admin {
   isActive: boolean;
   lastLogin?: string;
   createdAt?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
+  };
 }
 
 export interface LoginCredentials {

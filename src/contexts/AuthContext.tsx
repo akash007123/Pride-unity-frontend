@@ -10,6 +10,15 @@ interface Admin {
   role: 'Admin' | 'Sub Admin' | 'Volunteer' | 'Member';
   isActive: boolean;
   lastLogin?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  address?: {
+    street?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
+  };
 }
 
 interface AuthContextType {

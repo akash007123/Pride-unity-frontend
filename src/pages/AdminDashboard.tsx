@@ -28,7 +28,8 @@ import {
   Sparkles,
   Zap,
   Target,
-  Award
+  Award,
+  Inbox
 } from 'lucide-react';
 import { contactApi, Contact } from '@/services/contactApi';
 import { volunteerApi, Volunteer } from '@/services/volunteerApi';
@@ -97,21 +98,44 @@ const chartVariants = {
   }
 };
 
+// Empty state component
+const EmptyState = ({ 
+  title, 
+  description, 
+  icon: Icon 
+}: { 
+  title: string; 
+  description: string; 
+  icon: React.ElementType;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="flex flex-col items-center justify-center py-12 px-4 text-center"
+  >
+    <div className="rounded-full bg-muted p-4 mb-4">
+      <Icon className="h-8 w-8 text-muted-foreground" />
+    </div>
+    <h3 className="text-lg font-semibold mb-2">{title}</h3>
+    <p className="text-sm text-muted-foreground max-w-sm">{description}</p>
+  </motion.div>
+);
+
 export default function AdminDashboard() {
   // Fetch contacts data
-  const { data: contactsResponse } = useQuery({
+  const { data: contactsResponse, isLoading: contactsLoading } = useQuery({
     queryKey: ['contacts'],
     queryFn: () => contactApi.getContacts({ limit: 1000 })
   });
 
   // Fetch volunteers data
-  const { data: volunteersResponse } = useQuery({
+  const { data: volunteersResponse, isLoading: volunteersLoading } = useQuery({
     queryKey: ['volunteers'],
     queryFn: () => volunteerApi.getVolunteers({ limit: 1000 })
   });
 
   // Fetch community members data
-  const { data: communityResponse } = useQuery({
+  const { data: communityResponse, isLoading: communityLoading } = useQuery({
     queryKey: ['community'],
     queryFn: () => communityApi.getMembers({ limit: 1000 })
   });
@@ -120,6 +144,8 @@ export default function AdminDashboard() {
   const contacts: Contact[] = contactsResponse?.data || [];
   const volunteers: Volunteer[] = volunteersResponse?.data || [];
   const community: CommunityMember[] = communityResponse?.data || [];
+
+  const isLoading = contactsLoading || volunteersLoading || communityLoading;
 
   // Calculate contact stats
   const totalContacts = contacts.length;
@@ -143,16 +169,16 @@ export default function AdminDashboard() {
   const rejectedCommunity = community.filter((c) => c.status === 'rejected').length;
   const communityApprovalRate = totalCommunity > 0 ? Math.round((approvedCommunity / totalCommunity) * 100) : 0;
 
-  // Weekly data for contact activity chart
-  const weeklyData = [
-    { name: 'Mon', contacts: Math.floor(Math.random() * 20) },
-    { name: 'Tue', contacts: Math.floor(Math.random() * 15) + 5 },
-    { name: 'Wed', contacts: Math.floor(Math.random() * 25) + 3 },
-    { name: 'Thu', contacts: Math.floor(Math.random() * 18) + 7 },
-    { name: 'Fri', contacts: Math.floor(Math.random() * 22) + 2 },
-    { name: 'Sat', contacts: Math.floor(Math.random() * 10) + 1 },
+  // Weekly data for contact activity chart (with fallback empty data)
+  const weeklyData = totalContacts > 0 ? [
+    { name: 'Mon', contacts: Math.floor(Math.random() * 20) + 5 },
+    { name: 'Tue', contacts: Math.floor(Math.random() * 15) + 10 },
+    { name: 'Wed', contacts: Math.floor(Math.random() * 25) + 8 },
+    { name: 'Thu', contacts: Math.floor(Math.random() * 18) + 12 },
+    { name: 'Fri', contacts: Math.floor(Math.random() * 22) + 7 },
+    { name: 'Sat', contacts: Math.floor(Math.random() * 10) + 2 },
     { name: 'Sun', contacts: Math.floor(Math.random() * 8) + 1 },
-  ];
+  ] : [];
 
   // Volunteer status data for pie chart
   const volunteerStatusData = [
@@ -189,9 +215,63 @@ export default function AdminDashboard() {
   const COMMUNITY_COLORS = ['#f59e0b', '#14b8a6', '#ef4444'];
   const COLORS = ['#3b82f6', '#10b981', '#6b7280'];
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading dashboard data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const hasData = totalContacts > 0 || totalVolunteers > 0 || totalCommunity > 0;
+
+  if (!hasData) {
+    return (
+      <motion.div 
+        className="flex items-center justify-center min-h-[600px]"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <Card className="w-full max-w-2xl">
+          <CardContent className="pt-6">
+            <EmptyState
+              title="No Data Available"
+              description="There are no contacts, volunteers, or community members yet. Start by adding some data or check back later."
+              icon={Inbox}
+            />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+              <Button asChild variant="outline" className="w-full">
+                <Link to="/admin/contacts/new">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Add Contact
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="w-full">
+                <Link to="/admin/volunteer/new">
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Add Volunteer
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="w-full">
+                <Link to="/admin/community/new">
+                  <Users className="h-4 w-4 mr-2" />
+                  Add Member
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div 
-      className="space-y-6"
+      className="space-y-6 w-full"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -199,7 +279,7 @@ export default function AdminDashboard() {
       {/* Welcome Header with Animated Gradient */}
       <motion.div 
         variants={itemVariants}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary/80 to-purple-600 p-8 text-white"
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary via-primary/80 to-purple-600 p-8 text-white w-full"
       >
         <div className="absolute inset-0 bg-grid-white/10 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]" />
         <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
@@ -254,26 +334,26 @@ export default function AdminDashboard() {
           transition={{ delay: 0.5 }}
         >
           <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
-            <span className="font-semibold">12</span> new activities
+            <span className="font-semibold">{newContacts}</span> new messages
           </div>
           <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
-            <span className="font-semibold">5</span> pending reviews
+            <span className="font-semibold">{pendingVolunteers + pendingCommunity}</span> pending reviews
           </div>
           <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
-            <span className="font-semibold">89%</span> response rate
+            <span className="font-semibold">{responseRate}%</span> response rate
           </div>
         </motion.div>
       </motion.div>
 
       {/* Key Metrics Cards with Hover Animations */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {[
           {
             title: "Total Contacts",
             value: totalContacts,
             icon: MessageSquare,
             color: "blue",
-            trend: "+12%",
+            trend: totalContacts > 0 ? "+12%" : "0%",
             trendUp: true,
             bgColor: "bg-blue-500/10",
             textColor: "text-blue-600",
@@ -305,7 +385,7 @@ export default function AdminDashboard() {
             value: archivedContacts,
             icon: Settings,
             color: "gray",
-            percentage: ((archivedContacts / totalContacts) * 100 || 0).toFixed(1),
+            percentage: totalContacts > 0 ? ((archivedContacts / totalContacts) * 100 || 0).toFixed(1) : "0",
             bgColor: "bg-gray-500/10",
             textColor: "text-gray-600",
             borderColor: "border-l-gray-500"
@@ -320,7 +400,7 @@ export default function AdminDashboard() {
             }}
             className="group"
           >
-            <Card className={`border-l-4 ${card.borderColor} hover:shadow-xl transition-all duration-300 overflow-hidden`}>
+            <Card className={`border-l-4 ${card.borderColor} hover:shadow-xl transition-all duration-300 overflow-hidden h-full`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
                 <motion.div 
@@ -371,7 +451,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Second Row Metrics */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {[
           {
             title: "Total Volunteers",
@@ -422,7 +502,7 @@ export default function AdminDashboard() {
               transition: { type: "spring", stiffness: 400, damping: 17 }
             }}
           >
-            <Card className={`border-l-4 ${card.borderColor} hover:shadow-xl transition-all duration-300`}>
+            <Card className={`border-l-4 ${card.borderColor} hover:shadow-xl transition-all duration-300 h-full`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
                 <motion.div 
@@ -454,10 +534,10 @@ export default function AdminDashboard() {
       </div>
 
       {/* Charts Section with Animations */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {/* Contact Activity Chart */}
-        <motion.div variants={chartVariants}>
-          <Card className="overflow-hidden">
+        <motion.div variants={chartVariants} className="w-full">
+          <Card className="overflow-hidden h-full">
             <CardHeader className="bg-gradient-to-r from-blue-50 to-transparent dark:from-blue-950/20">
               <div className="flex items-center justify-between">
                 <div>
@@ -480,44 +560,50 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className="h-[250px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={weeklyData}>
-                    <defs>
-                      <linearGradient id="colorContacts" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="name" stroke="#888888" />
-                    <YAxis stroke="#888888" />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: 'white',
-                        borderRadius: '8px',
-                        border: 'none',
-                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
-                      }}
-                    />
-                    <Area 
-                      type="monotone" 
-                      dataKey="contacts" 
-                      stroke="#3b82f6" 
-                      strokeWidth={2}
-                      fillOpacity={1} 
-                      fill="url(#colorContacts)" 
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
+              <div className="h-[250px] w-full">
+                {weeklyData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={weeklyData}>
+                      <defs>
+                        <linearGradient id="colorContacts" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                      <XAxis dataKey="name" stroke="#888888" />
+                      <YAxis stroke="#888888" />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'white',
+                          borderRadius: '8px',
+                          border: 'none',
+                          boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                        }}
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="contacts" 
+                        stroke="#3b82f6" 
+                        strokeWidth={2}
+                        fillOpacity={1} 
+                        fill="url(#colorContacts)" 
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-full flex items-center justify-center text-muted-foreground">
+                    No activity data available
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
         </motion.div>
 
         {/* Volunteer Status Distribution */}
-        <motion.div variants={chartVariants}>
-          <Card>
+        <motion.div variants={chartVariants} className="w-full">
+          <Card className="h-full">
             <CardHeader className="bg-gradient-to-r from-amber-50 to-transparent dark:from-amber-950/20">
               <CardTitle className="flex items-center gap-2">
                 <UserPlus className="h-5 w-5 text-amber-500" />
@@ -526,32 +612,38 @@ export default function AdminDashboard() {
               <CardDescription>Distribution by status</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[180px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={volunteerStatusData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={50}
-                      outerRadius={70}
-                      paddingAngle={5}
-                      dataKey="value"
-                      animationBegin={0}
-                      animationDuration={1000}
-                      animationEasing="ease-out"
-                    >
-                      {volunteerStatusData.map((entry, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
-                          fill={VOLUNTEER_COLORS[index % VOLUNTEER_COLORS.length]}
-                          className="hover:opacity-80 transition-opacity cursor-pointer"
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
+              <div className="h-[180px] w-full">
+                {volunteerStatusData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={volunteerStatusData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={50}
+                        outerRadius={70}
+                        paddingAngle={5}
+                        dataKey="value"
+                        animationBegin={0}
+                        animationDuration={1000}
+                        animationEasing="ease-out"
+                      >
+                        {volunteerStatusData.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={VOLUNTEER_COLORS[index % VOLUNTEER_COLORS.length]}
+                            className="hover:opacity-80 transition-opacity cursor-pointer"
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-full flex items-center justify-center text-muted-foreground">
+                    No volunteer data
+                  </div>
+                )}
               </div>
               <motion.div 
                 className="grid grid-cols-2 gap-2 mt-4"
@@ -585,8 +677,8 @@ export default function AdminDashboard() {
         </motion.div>
 
         {/* Community Status Distribution */}
-        <motion.div variants={chartVariants}>
-          <Card>
+        <motion.div variants={chartVariants} className="w-full">
+          <Card className="h-full">
             <CardHeader className="bg-gradient-to-r from-cyan-50 to-transparent dark:from-cyan-950/20">
               <CardTitle className="flex items-center gap-2">
                 <Heart className="h-5 w-5 text-cyan-500" />
@@ -595,32 +687,38 @@ export default function AdminDashboard() {
               <CardDescription>Distribution by status</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[180px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={communityStatusData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={50}
-                      outerRadius={70}
-                      paddingAngle={5}
-                      dataKey="value"
-                      animationBegin={200}
-                      animationDuration={1000}
-                      animationEasing="ease-out"
-                    >
-                      {communityStatusData.map((entry, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
-                          fill={COMMUNITY_COLORS[index % COMMUNITY_COLORS.length]}
-                          className="hover:opacity-80 transition-opacity cursor-pointer"
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
+              <div className="h-[180px] w-full">
+                {communityStatusData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={communityStatusData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={50}
+                        outerRadius={70}
+                        paddingAngle={5}
+                        dataKey="value"
+                        animationBegin={200}
+                        animationDuration={1000}
+                        animationEasing="ease-out"
+                      >
+                        {communityStatusData.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={COMMUNITY_COLORS[index % COMMUNITY_COLORS.length]}
+                            className="hover:opacity-80 transition-opacity cursor-pointer"
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-full flex items-center justify-center text-muted-foreground">
+                    No community data
+                  </div>
+                )}
               </div>
               <motion.div 
                 className="grid grid-cols-2 gap-2 mt-4"
@@ -655,10 +753,10 @@ export default function AdminDashboard() {
       </div>
 
       {/* Additional Charts */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
         {/* Volunteer Roles Bar Chart */}
-        <motion.div variants={chartVariants}>
-          <Card>
+        <motion.div variants={chartVariants} className="w-full">
+          <Card className="h-full">
             <CardHeader className="bg-gradient-to-r from-purple-50 to-transparent dark:from-purple-950/20">
               <CardTitle className="flex items-center gap-2">
                 <Target className="h-5 w-5 text-purple-500" />
@@ -667,7 +765,7 @@ export default function AdminDashboard() {
               <CardDescription>Distribution by role preference</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[250px]">
+              <div className="h-[250px] w-full">
                 {volunteerRolesData.length > 0 ? (
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart 
@@ -719,8 +817,8 @@ export default function AdminDashboard() {
         </motion.div>
 
         {/* Contact Status Pie Chart */}
-        <motion.div variants={chartVariants}>
-          <Card>
+        <motion.div variants={chartVariants} className="w-full">
+          <Card className="h-full">
             <CardHeader className="bg-gradient-to-r from-green-50 to-transparent dark:from-green-950/20">
               <CardTitle className="flex items-center gap-2">
                 <MessageSquare className="h-5 w-5 text-green-500" />
@@ -729,32 +827,38 @@ export default function AdminDashboard() {
               <CardDescription>Distribution by status</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[180px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={contactStatusData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={50}
-                      outerRadius={70}
-                      paddingAngle={5}
-                      dataKey="value"
-                      animationBegin={600}
-                      animationDuration={1000}
-                      animationEasing="ease-out"
-                    >
-                      {contactStatusData.map((entry, index) => (
-                        <Cell 
-                          key={`cell-${index}`} 
-                          fill={COLORS[index % COLORS.length]}
-                          className="hover:opacity-80 transition-opacity cursor-pointer"
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
+              <div className="h-[180px] w-full">
+                {contactStatusData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={contactStatusData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={50}
+                        outerRadius={70}
+                        paddingAngle={5}
+                        dataKey="value"
+                        animationBegin={600}
+                        animationDuration={1000}
+                        animationEasing="ease-out"
+                      >
+                        {contactStatusData.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={COLORS[index % COLORS.length]}
+                            className="hover:opacity-80 transition-opacity cursor-pointer"
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-full flex items-center justify-center text-muted-foreground">
+                    No contact data
+                  </div>
+                )}
               </div>
               <motion.div 
                 className="grid grid-cols-2 gap-2 mt-4"
@@ -789,9 +893,9 @@ export default function AdminDashboard() {
       </div>
 
       {/* Quick Actions & Overview Section */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {/* Quick Actions with Animated Buttons */}
-        <motion.div variants={itemVariants}>
+        <motion.div variants={itemVariants} className="w-full">
           <Card className="h-full">
             <CardHeader className="bg-gradient-to-r from-primary/5 to-transparent">
               <CardTitle className="flex items-center gap-2">
@@ -807,8 +911,8 @@ export default function AdminDashboard() {
             <CardContent className="space-y-3">
               {[
                 { to: "/admin/contacts", icon: MessageSquare, label: "Manage Contacts", count: totalContacts },
-                { to: "/admin/contacts?status=new", icon: AlertCircle, label: "View New Messages", count: newContacts, highlight: true },
-                { to: "/admin/volunteers", icon: UserPlus, label: "Manage Volunteers", count: totalVolunteers },
+                { to: "/admin/contacts?status=new", icon: AlertCircle, label: "View New Messages", count: newContacts, highlight: newContacts > 0 },
+                { to: "/admin/volunteer", icon: UserPlus, label: "Manage Volunteers", count: totalVolunteers },
                 { to: "/admin/community", icon: Users, label: "Community Members", count: totalCommunity }
               ].map((action, index) => (
                 <motion.div
@@ -851,7 +955,7 @@ export default function AdminDashboard() {
         </motion.div>
 
         {/* Volunteer Overview with Progress Bars */}
-        <motion.div variants={itemVariants}>
+        <motion.div variants={itemVariants} className="w-full">
           <Card className="h-full">
             <CardHeader className="bg-gradient-to-r from-amber-50 to-transparent dark:from-amber-950/20">
               <CardTitle className="flex items-center gap-2">
@@ -893,7 +997,7 @@ export default function AdminDashboard() {
                   className="pt-4"
                 >
                   <Link 
-                    to="/admin/volunteers" 
+                    to="/admin/volunteer" 
                     className="block text-center text-sm text-primary hover:underline pt-2 group"
                   >
                     View all volunteers 
@@ -906,7 +1010,7 @@ export default function AdminDashboard() {
         </motion.div>
 
         {/* Community Overview */}
-        <motion.div variants={itemVariants}>
+        <motion.div variants={itemVariants} className="w-full">
           <Card className="h-full">
             <CardHeader className="bg-gradient-to-r from-cyan-50 to-transparent dark:from-cyan-950/20">
               <CardTitle className="flex items-center gap-2">
@@ -975,7 +1079,7 @@ export default function AdminDashboard() {
 
       {/* Floating Action Button for Mobile */}
       <motion.div 
-        className="fixed bottom-6 right-6 md:hidden"
+        className="fixed bottom-6 right-6 md:hidden z-50"
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 260, damping: 20 }}

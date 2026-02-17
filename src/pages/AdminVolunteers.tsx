@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Card,
@@ -47,10 +47,11 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 import { volunteerApi, Volunteer } from '@/services/volunteerApi';
 import { ViewVolunteerModal } from '@/components/admin/ViewVolunteerModal';
 import { EditVolunteerModal } from '@/components/admin/EditVolunteerModal';
-import { DeleteVolunteerModal } from '@/components/admin/DeleteVolunteerModal';
+import { DeleteModal } from '@/components/admin/DeleteModal';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -128,6 +129,18 @@ export default function AdminVolunteers() {
   const { data: stats } = useQuery({
     queryKey: ['volunteerStats'],
     queryFn: () => volunteerApi.getStats(),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => volunteerApi.deleteVolunteer(id),
+    onSuccess: () => {
+      toast.success('Volunteer deleted successfully');
+      handleVolunteerDeleted();
+      setDeleteModalOpen(false);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to delete volunteer');
+    },
   });
 
   const handleView = (volunteer: Volunteer) => {
@@ -668,10 +681,14 @@ export default function AdminVolunteers() {
         open={editModalOpen}
         onOpenChange={setEditModalOpen}
       />
-      <DeleteVolunteerModal
-        volunteer={selectedVolunteer}
+      <DeleteModal
         open={deleteModalOpen}
         onOpenChange={setDeleteModalOpen}
+        title="Delete Volunteer"
+        description="Are you sure you want to delete this volunteer? This action cannot be undone."
+        item={selectedVolunteer ? { name: selectedVolunteer.fullName, email: selectedVolunteer.email } : undefined}
+        onConfirm={() => selectedVolunteer && deleteMutation.mutate(selectedVolunteer.id)}
+        isPending={deleteMutation.isPending}
       />
     </motion.div>
   );

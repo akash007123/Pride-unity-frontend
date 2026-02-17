@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Card,
@@ -46,10 +46,11 @@ import {
   Clock
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 import { communityApi, CommunityMember } from '@/services/communityApi';
 import { ViewCommunityModal } from '@/components/admin/ViewCommunityModal';
 import { EditCommunityModal } from '@/components/admin/EditCommunityModal';
-import { DeleteCommunityModal } from '@/components/admin/DeleteCommunityModal';
+import { DeleteModal } from '@/components/admin/DeleteModal';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -119,6 +120,18 @@ export default function AdminCommunity() {
   const { data: stats } = useQuery({
     queryKey: ['communityStats'],
     queryFn: () => communityApi.getStats(),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => communityApi.deleteMember(id),
+    onSuccess: () => {
+      toast.success('Community member deleted successfully');
+      handleMemberDeleted();
+      setDeleteModalOpen(false);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to delete community member');
+    },
   });
 
   const handleView = (member: CommunityMember) => {
@@ -652,10 +665,14 @@ export default function AdminCommunity() {
         open={editModalOpen}
         onOpenChange={setEditModalOpen}
       />
-      <DeleteCommunityModal
-        member={selectedMember}
+      <DeleteModal
         open={deleteModalOpen}
         onOpenChange={setDeleteModalOpen}
+        title="Delete Community Member"
+        description="Are you sure you want to delete this community member? This action cannot be undone."
+        item={selectedMember ? { name: selectedMember.name, email: selectedMember.email } : undefined}
+        onConfirm={() => selectedMember && deleteMutation.mutate(selectedMember.id)}
+        isPending={deleteMutation.isPending}
       />
     </motion.div>
   );

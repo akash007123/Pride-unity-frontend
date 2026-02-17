@@ -69,71 +69,83 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { useTheme } from '@/hooks/useTheme';
 
-const adminNavItems = [
+// Type for admin roles
+type AdminRole = 'Admin' | 'Sub Admin' | 'Volunteer' | 'Member';
+
+interface NavItem {
+  title: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  badge: string | null;
+  color: string;
+  disabled?: boolean;
+  roles?: AdminRole[];
+}
+
+const adminNavItems: NavItem[] = [
   {
     title: 'Dashboard',
     href: '/admin',
     icon: LayoutDashboard,
     badge: null,
-    color: 'from-blue-500 to-cyan-500'
+    color: 'from-blue-500 to-cyan-500',
+    roles: ['Admin', 'Sub Admin', 'Volunteer', 'Member']
   },
   {
     title: 'Users',
     href: '/admin/users',
     icon: Shield,
     badge: null,
-    color: 'from-red-500 to-orange-500'
+    color: 'from-red-500 to-orange-500',
+    roles: ['Admin']
   },
   {
     title: 'Contacts',
     href: '/admin/contacts',
     icon: Mail,
     badge: 'new',
-    color: 'from-purple-500 to-pink-500'
+    color: 'from-purple-500 to-pink-500',
+    roles: ['Admin', 'Sub Admin']
   },
   {
     title: 'Community',
     href: '/admin/community',
     icon: Users,
     badge: 'new',
-    color: 'from-green-500 to-emerald-500'
+    color: 'from-green-500 to-emerald-500',
+    roles: ['Admin', 'Sub Admin']
   },
   {
     title: 'Volunteer',
     href: '/admin/volunteer',
     icon: UserPlus,
     badge: 'new',
-    color: 'from-amber-500 to-orange-500'
+    color: 'from-amber-500 to-orange-500',
+    roles: ['Admin', 'Sub Admin']
   },
   {
     title: 'Events',
     href: '/admin/events',
     icon: Calendar,
     badge: null,
-    color: 'from-red-500 to-rose-500'
-  },
-  {
-    title: 'All Users',
-    href: '/admin/all-users',
-    icon: CircleUser,
-    badge: null,
-    color: 'from-violet-500 to-purple-500'
+    color: 'from-red-500 to-rose-500',
+    roles: ['Admin', 'Sub Admin', 'Volunteer']
   },
   {
     title: 'Reports',
     href: '/admin/reports',
     icon: BarChart3,
     badge: null,
-    disabled: true,
-    color: 'from-indigo-500 to-purple-500'
+    color: 'from-indigo-500 to-purple-500',
+    roles: ['Admin']
   },
   {
     title: 'Settings',
     href: '/admin/settings',
     icon: Settings,
     badge: null,
-    disabled: true,
-    color: 'from-gray-500 to-slate-500'
+    color: 'from-gray-500 to-slate-500',
+    roles: ['Admin']
   },
 ];
 
@@ -166,7 +178,7 @@ function AdminSidebar() {
 
   return (
     <Sidebar 
-      className="border-r bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+      className="border-r bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 h-screen sticky top-0"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -203,7 +215,14 @@ function AdminSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {adminNavItems.map((item) => {
+              {adminNavItems
+                .filter((item) => {
+                  if (!item.roles) return true;
+                  return item.roles.some(role => 
+                    (admin?.role || '').toLowerCase() === role.toLowerCase()
+                  );
+                })
+                .map((item) => {
                 const isActive = location.pathname === item.href || 
                   (item.href !== '/admin' && location.pathname.startsWith(item.href));
                 
@@ -242,7 +261,7 @@ function AdminSidebar() {
                                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                                 >
                                   <SidebarMenuBadge>
-                                    <Badge variant="destructive" className="h-5 px-1.5 text-[10px] animate-pulse">
+                                    <Badge variant="destructive" className="h-5 px-1.5 mb-5 text-[10px] animate-pulse">
                                       {newContactsCount}
                                     </Badge>
                                   </SidebarMenuBadge>
@@ -255,7 +274,7 @@ function AdminSidebar() {
                                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                                 >
                                   <SidebarMenuBadge>
-                                    <Badge variant="destructive" className="h-5 px-1.5 text-[10px] animate-pulse">
+                                    <Badge variant="destructive" className="h-5 px-1.5 mb-5 text-[10px] animate-pulse">
                                       {newVolunteersCount}
                                     </Badge>
                                   </SidebarMenuBadge>
@@ -315,14 +334,6 @@ function AdminSidebar() {
                         </Badge>
                       </motion.div>
                     )}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/admin/events/create" className="flex items-center group">
-                    <Calendar className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
-                    <span>Create Event</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -427,7 +438,6 @@ function AdminSidebar() {
           </DropdownMenu>
         </motion.div>
 
-        {/* System Status */}
         <motion.div 
           className="mt-3 pt-3 border-t border-border/50"
           initial={{ opacity: 0 }}
@@ -534,7 +544,14 @@ function MobileSidebar() {
             </div>
             
             <SidebarMenu className="px-2">
-              {adminNavItems.map((item) => {
+              {adminNavItems
+                .filter((item) => {
+                  if (!item.roles) return true;
+                  return item.roles.some(role => 
+                    (admin?.role || '').toLowerCase() === role.toLowerCase()
+                  );
+                })
+                .map((item) => {
                 const isActive = location.pathname === item.href || 
                   (item.href !== '/admin' && location.pathname.startsWith(item.href));
                 
@@ -660,16 +677,17 @@ export function AdminLayout() {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Desktop sidebar with collapsible state */}
-      <div className="hidden md:block">
+    <div className="flex h-screen w-screen overflow-hidden bg-background">
+      {/* Desktop sidebar */}
+      <div className="hidden md:block h-full">
         <AdminSidebar />
       </div>
       
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-screen">
+      {/* Main content - takes full remaining space */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden">
+        {/* Header - Fixed height */}
         <motion.header 
-          className={`sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 transition-all duration-200 ${
+          className={`flex-none h-16 flex items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 transition-all duration-200 ${
             isScrolled ? 'shadow-lg' : ''
           }`}
           initial={{ y: -100 }}
@@ -873,10 +891,10 @@ export function AdminLayout() {
           </div>
         </motion.header>
 
-        {/* Page Content with Animated Transitions */}
+        {/* Page Content - Takes remaining space with scroll */}
         <main className="flex-1 overflow-auto">
           <motion.div 
-            className="container mx-auto p-4 md:p-6 lg:p-8 max-w-7xl"
+            className="min-h-full p-4 md:p-6 lg:p-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -888,14 +906,14 @@ export function AdminLayout() {
           </motion.div>
         </main>
 
-        {/* Footer */}
+        {/* Footer - Fixed height */}
         <motion.footer 
-          className="border-t py-4 px-4 md:px-6 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+          className="flex-none border-t py-4 px-4 md:px-6 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <div className="container mx-auto max-w-7xl flex flex-col md:flex-row justify-between items-center gap-2">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-2">
             <p className="text-xs text-muted-foreground">
               © 2024 Pride Admin Panel. All rights reserved.
             </p>

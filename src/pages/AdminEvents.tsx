@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -44,11 +44,12 @@ import {
   XCircle,
   Clock
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { eventApi, Event } from '@/services/eventApi';
 import { Link } from 'react-router-dom';
 import { ViewEventModal } from '@/components/admin/ViewEventModal';
 import { EditEventModal } from '@/components/admin/EditEventModal';
-import { DeleteEventModal } from '@/components/admin/DeleteEventModal';
+import { DeleteModal } from '@/components/admin/DeleteModal';
 import { AddEventModal } from '@/components/admin/AddEventModal';
 import {
   DropdownMenu,
@@ -150,6 +151,18 @@ export default function AdminEvents() {
     queryClient.invalidateQueries({ queryKey: ['adminEvents'] });
     queryClient.invalidateQueries({ queryKey: ['eventStats'] });
   };
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => eventApi.deleteEvent(id),
+    onSuccess: () => {
+      toast.success('Event deleted successfully');
+      handleEventDeleted();
+      setDeleteModalOpen(false);
+    },
+    onError: () => {
+      toast.error('Failed to delete event');
+    },
+  });
 
   const handleEventCreated = () => {
     queryClient.invalidateQueries({ queryKey: ['adminEvents'] });
@@ -699,11 +712,14 @@ export default function AdminEvents() {
             onOpenChange={setEditModalOpen}
             onEventUpdated={handleEventUpdated}
           />
-          <DeleteEventModal
-            event={selectedEvent}
+          <DeleteModal
             open={deleteModalOpen}
             onOpenChange={setDeleteModalOpen}
-            onEventDeleted={handleEventDeleted}
+            title="Delete Event"
+            description={selectedEvent ? `Are you sure you want to delete "${selectedEvent.title}"? This action cannot be undone and will also delete all registrations for this event.` : 'Are you sure you want to delete this event? This action cannot be undone.'}
+            item={selectedEvent ? { title: selectedEvent.title } : undefined}
+            onConfirm={() => selectedEvent && deleteMutation.mutate(selectedEvent.id)}
+            isPending={deleteMutation.isPending}
           />
         </>
       )}

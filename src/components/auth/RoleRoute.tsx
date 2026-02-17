@@ -1,17 +1,17 @@
 import React from 'react';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 
 // Role types matching AuthContext
 type AdminRole = 'Admin' | 'Sub Admin' | 'Volunteer' | 'Member';
 
-interface ProtectedRouteProps {
-  allowedRoles?: AdminRole[];
-  children?: React.ReactNode;
+interface RoleRouteProps {
+  allowedRoles: AdminRole[];
+  children: React.ReactNode;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, children }) => {
+const RoleRoute: React.FC<RoleRouteProps> = ({ allowedRoles, children }) => {
   const { admin, isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 
@@ -33,7 +33,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, children 
   }
 
   // Role-based access control
-  if (allowedRoles && admin && allowedRoles.length > 0) {
+  if (allowedRoles.length > 0 && admin) {
     const hasRole = allowedRoles.some(role => 
       admin.role.toLowerCase() === role.toLowerCase()
     );
@@ -57,8 +57,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, children 
     }
   }
 
-  // Authenticated and authorized - render child routes or children
-  return children ? <>{children}</> : <Outlet />;
+  // Authorized - render children
+  return <>{children}</>;
 };
 
-export default ProtectedRoute;
+export default RoleRoute;

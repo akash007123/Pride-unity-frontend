@@ -124,6 +124,14 @@ const adminNavItems: NavItem[] = [
     roles: ['Admin', 'Sub Admin']
   },
   {
+    title: 'Custom Volunteer',
+    href: '/admin/custom-volunteer',
+    icon: UserPlus,
+    badge: 'new',
+    color: 'from-amber-500 to-orange-500',
+    roles: ['Admin', 'Sub Admin', 'Volunteer', 'Member']
+  },
+  {
     title: 'Events',
     href: '/admin/events',
     icon: Calendar,

@@ -39,6 +39,7 @@ import AdminUsers from "./pages/AdminUsers";
 import AdminAllUsers from "./pages/AdminAllUsers";
 import AdminReports from "./pages/AdminReports";
 import AdminSettings from "./pages/AdminSettings";
+import AdminProfile from "./pages/AdminProfile";
 
 const queryClient = new QueryClient();
 
@@ -106,6 +107,7 @@ const App = () => (
                 <Route path="admin/all-users" element={<RoleRoute allowedRoles={['Admin']}><AdminAllUsers /></RoleRoute>} />
                 <Route path="admin/reports" element={<RoleRoute allowedRoles={['Admin']}><AdminReports /></RoleRoute>} />
                 <Route path="admin/settings" element={<RoleRoute allowedRoles={['Admin']}><AdminSettings /></RoleRoute>} />
+                <Route path="admin/profile" element={<AdminProfile />} />
               </Route>
             </Routes>
           </BrowserRouter>

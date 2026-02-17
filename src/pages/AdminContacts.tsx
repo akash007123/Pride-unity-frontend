@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Card,
@@ -41,11 +41,12 @@ import {
   MoreVertical,
   Archive
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { contactApi, Contact } from '@/services/contactApi';
 import { ViewContactModal } from '@/components/admin/ViewContactModal';
 import { EditContactModal } from '@/components/admin/EditContactModal';
-import { DeleteContactModal } from '@/components/admin/DeleteContactModal';
+import { DeleteModal } from '@/components/admin/DeleteModal';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -143,6 +144,18 @@ export default function AdminContacts() {
     queryClient.invalidateQueries({ queryKey: ['contacts'] });
     queryClient.invalidateQueries({ queryKey: ['contactStats'] });
   };
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => contactApi.deleteContact(id),
+    onSuccess: () => {
+      toast.success('Contact deleted successfully');
+      handleContactDeleted();
+      setDeleteModalOpen(false);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to delete contact');
+    },
+  });
 
   const totalPages = data?.pagination.pages || 1;
 
@@ -592,11 +605,14 @@ export default function AdminContacts() {
         onOpenChange={setEditModalOpen}
         onContactUpdated={handleContactUpdated}
       />
-      <DeleteContactModal
-        contact={selectedContact}
+      <DeleteModal
         open={deleteModalOpen}
         onOpenChange={setDeleteModalOpen}
-        onContactDeleted={handleContactDeleted}
+        title="Delete Contact"
+        description={selectedContact ? `Are you sure you want to delete this contact from ${selectedContact.name}? This action cannot be undone.` : 'Are you sure you want to delete this contact? This action cannot be undone.'}
+        item={selectedContact ? { name: selectedContact.name, email: selectedContact.email, subject: selectedContact.subject } : undefined}
+        onConfirm={() => selectedContact && deleteMutation.mutate(selectedContact.id)}
+        isPending={deleteMutation.isPending}
       />
     </motion.div>
   );

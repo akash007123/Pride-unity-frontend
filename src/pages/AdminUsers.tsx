@@ -18,7 +18,7 @@ import {
 import { toast } from 'sonner';
 import ViewProfileModal from '@/components/admin/ViewProfileModal';
 import EditUserModal from '@/components/admin/EditUserModal';
-import DeleteUserModal from '@/components/admin/DeleteUserModal';
+import DeleteModal from '@/components/admin/DeleteModal';
 
 const roleColors: Record<string, string> = {
   'Admin': 'bg-red-100 text-red-800 hover:bg-red-200',
@@ -434,12 +434,14 @@ const AdminUsers: React.FC = () => {
       />
 
       {/* Delete User Modal */}
-      <DeleteUserModal
+      <DeleteModal
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
-        user={selectedUser}
-        isProcessing={isProcessing}
+        title="Delete Admin User"
+        description={selectedUser ? `Are you sure you want to delete ${selectedUser.name}? This action cannot be undone.` : 'Are you sure you want to delete this user? This action cannot be undone.'}
+        item={selectedUser ? { name: selectedUser.name, email: selectedUser.email } : undefined}
         onConfirm={handleConfirmDelete}
+        isPending={isProcessing}
       />
     </div>
   );

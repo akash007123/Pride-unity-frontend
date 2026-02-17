@@ -509,7 +509,7 @@ function MobileSidebar() {
       </motion.div>
       
       <Sheet open={open} onOpenChange={setOpen}>
-        <SheetContent side="left" className="w-[300px] p-0">
+        <SheetContent side="left" className="w-[280px] sm:w-[300px] p-0">
           <motion.div
             initial={{ x: -300 }}
             animate={{ x: 0 }}
@@ -687,7 +687,7 @@ export function AdminLayout() {
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         {/* Header - Fixed height */}
         <motion.header 
-          className={`flex-none h-16 flex items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 md:px-6 transition-all duration-200 ${
+          className={`flex-none h-14 md:h-16 flex items-center gap-2 md:gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-2 md:px-6 transition-all duration-200 ${
             isScrolled ? 'shadow-lg' : ''
           }`}
           initial={{ y: -100 }}
@@ -718,7 +718,7 @@ export function AdminLayout() {
               </kbd>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 md:gap-2">
               {/* Sidebar Toggle Button */}
               <TooltipProvider>
                 <Tooltip>
@@ -738,8 +738,8 @@ export function AdminLayout() {
                 </Tooltip>
               </TooltipProvider>
 
-              {/* Quick Actions Toolbar */}
-              <div className="hidden md:flex items-center gap-1 mr-2">
+              {/* Mobile-optimized icons row - visible on all screens */}
+              <div className="flex items-center gap-1">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -894,7 +894,7 @@ export function AdminLayout() {
         {/* Page Content - Takes remaining space with scroll */}
         <main className="flex-1 overflow-auto">
           <motion.div 
-            className="min-h-full p-4 md:p-6 lg:p-8"
+            className="min-h-full p-3 sm:p-4 md:p-5 lg:p-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -908,23 +908,23 @@ export function AdminLayout() {
 
         {/* Footer - Fixed height */}
         <motion.footer 
-          className="flex-none border-t py-4 px-4 md:px-6 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
+          className="flex-none border-t py-3 px-3 md:px-6 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <div className="flex flex-col md:flex-row justify-between items-center gap-2">
-            <p className="text-xs text-muted-foreground">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2 text-xs">
+            <p className="text-muted-foreground">
               © 2024 Pride Admin Panel. All rights reserved.
             </p>
-            <div className="flex items-center gap-4">
-              <Link to="/privacy" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+            <div className="flex items-center gap-3 md:gap-4">
+              <Link to="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
                 Privacy
               </Link>
-              <Link to="/terms" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors">
                 Terms
               </Link>
-              <Link to="/help" className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              <Link to="/help" className="text-muted-foreground hover:text-foreground transition-colors">
                 Help
               </Link>
               <Badge variant="outline" className="text-[10px] bg-primary/5">

@@ -201,10 +201,10 @@ export default function AdminEvents() {
         <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
         <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
         
-        <div className="relative flex flex-col md:flex-row md:items-center md:justify-between">
+        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <motion.h1 
-              className="text-3xl font-bold tracking-tight"
+              className="text-2xl sm:text-3xl font-bold tracking-tight"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -212,7 +212,7 @@ export default function AdminEvents() {
               Events Management
             </motion.h1>
             <motion.p 
-              className="mt-2 text-white/80"
+              className="mt-1 sm:mt-2 text-white/80 text-sm sm:text-base"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -226,58 +226,58 @@ export default function AdminEvents() {
             )}
           </div>
           <motion.div 
-            className="mt-4 md:mt-0 flex items-center gap-3"
+            className="mt-3 sm:mt-0 flex flex-wrap items-center gap-2 sm:gap-3"
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            <Badge variant="secondary" className="px-4 py-2 bg-white/20 text-white border-white/30 backdrop-blur-sm">
-              <Calendar className="h-4 w-4 mr-2" />
+            <Badge variant="secondary" className="px-2 sm:px-4 py-1.5 sm:py-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs sm:text-sm">
+              <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
               {stats?.data?.total || 0} Events
             </Badge>
             <Button 
               variant="secondary" 
               size="sm" 
-              className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+              className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm h-8 sm:h-9"
               onClick={() => refetch()}
               disabled={isFetching}
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isFetching ? 'animate-spin' : ''}`} />
-              Refresh
+              <RefreshCw className={`h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 ${isFetching ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">Refresh</span>
             </Button>
             <Button 
               variant="secondary" 
               size="sm" 
-              className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+              className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm h-8 sm:h-9"
               onClick={handleExport}
             >
-              <Download className="h-4 w-4 mr-2" />
-              Export
+              <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
+              <span className="hidden sm:inline">Export</span>
             </Button>
-            <Button onClick={() => setAddModalOpen(true)} className="btn-pride">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Event
+            <Button onClick={() => setAddModalOpen(true)} className="btn-pride h-8 sm:h-9">
+              <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
+              <span className="hidden sm:inline">Add Event</span>
             </Button>
           </motion.div>
         </div>
 
         {/* Quick Stats Pills */}
         <motion.div 
-          className="mt-6 flex flex-wrap gap-3"
+          className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-3"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
+          <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm backdrop-blur-sm">
             <span className="font-semibold">{stats?.data?.byStatus?.draft || 0}</span> draft
           </div>
-          <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
+          <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm backdrop-blur-sm">
             <span className="font-semibold">{stats?.data?.byStatus?.published || 0}</span> published
           </div>
-          <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
+          <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm backdrop-blur-sm">
             <span className="font-semibold">{stats?.data?.totalRegistrations || 0}</span> registrations
           </div>
-          <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
+          <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm backdrop-blur-sm">
             <span className="font-semibold">{stats?.data?.byStatus?.completed || 0}</span> completed
           </div>
         </motion.div>

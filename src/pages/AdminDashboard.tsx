@@ -285,10 +285,10 @@ export default function AdminDashboard() {
         <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
         <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
         
-        <div className="relative flex flex-col md:flex-row md:items-center md:justify-between">
+        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <motion.h1 
-              className="text-4xl font-bold tracking-tight"
+              className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -296,7 +296,7 @@ export default function AdminDashboard() {
               Welcome back, Admin
             </motion.h1>
             <motion.p 
-              className="mt-2 text-white/80"
+              className="mt-1 sm:mt-2 text-white/80 text-sm sm:text-base"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -310,17 +310,18 @@ export default function AdminDashboard() {
             </motion.p>
           </div>
           <motion.div 
-            className="mt-4 md:mt-0 flex items-center gap-2"
+            className="mt-3 sm:mt-0 flex flex-wrap items-center gap-2"
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            <Badge variant="secondary" className="px-4 py-2 bg-white/20 text-white border-white/30 backdrop-blur-sm">
-              <Activity className="h-4 w-4 mr-2 animate-pulse" />
-              System Status: <span className="ml-1 font-semibold">Operational</span>
+            <Badge variant="secondary" className="px-2 sm:px-4 py-1.5 sm:py-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs sm:text-sm">
+              <Activity className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 animate-pulse" />
+              <span className="hidden xs:inline">System Status:</span> 
+              <span className="ml-0.5 sm:ml-1 font-semibold">Operational</span>
             </Badge>
-            <Badge variant="secondary" className="px-4 py-2 bg-white/20 text-white border-white/30 backdrop-blur-sm">
-              <Sparkles className="h-4 w-4 mr-2" />
+            <Badge variant="secondary" className="px-2 sm:px-4 py-1.5 sm:py-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs sm:text-sm">
+              <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
               v2.0.0
             </Badge>
           </motion.div>
@@ -328,25 +329,25 @@ export default function AdminDashboard() {
 
         {/* Quick Stats Pills */}
         <motion.div 
-          className="mt-6 flex flex-wrap gap-3"
+          className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-3"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
+          <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm backdrop-blur-sm">
             <span className="font-semibold">{newContacts}</span> new messages
           </div>
-          <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
+          <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm backdrop-blur-sm">
             <span className="font-semibold">{pendingVolunteers + pendingCommunity}</span> pending reviews
           </div>
-          <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
+          <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm backdrop-blur-sm">
             <span className="font-semibold">{responseRate}%</span> response rate
           </div>
         </motion.div>
       </motion.div>
 
       {/* Key Metrics Cards with Hover Animations */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {[
           {
             title: "Total Contacts",
@@ -402,17 +403,17 @@ export default function AdminDashboard() {
           >
             <Card className={`border-l-4 ${card.borderColor} hover:shadow-xl transition-all duration-300 overflow-hidden h-full`}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{card.title}</CardTitle>
+                <CardTitle className="text-xs sm:text-sm font-medium">{card.title}</CardTitle>
                 <motion.div 
-                  className={`h-10 w-10 rounded-xl ${card.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform`}
+                  className={`h-8 w-8 sm:h-10 sm:w-10 rounded-xl ${card.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform`}
                   whileHover={{ rotate: 360 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <card.icon className={`h-5 w-5 ${card.textColor}`} />
+                  <card.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${card.textColor}`} />
                 </motion.div>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">{card.value}</div>
+                <div className="text-2xl sm:text-3xl font-bold">{card.value}</div>
                 <div className="flex items-center mt-2">
                   {card.trend && (
                     <>
@@ -534,21 +535,21 @@ export default function AdminDashboard() {
       </div>
 
       {/* Charts Section with Animations */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {/* Contact Activity Chart */}
         <motion.div variants={chartVariants} className="w-full">
           <Card className="overflow-hidden h-full">
-            <CardHeader className="bg-gradient-to-r from-blue-50 to-transparent dark:from-blue-950/20">
-              <div className="flex items-center justify-between">
+            <CardHeader className="bg-gradient-to-r from-blue-50 to-transparent dark:from-blue-950/20 pb-3 sm:pb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Activity className="h-5 w-5 text-blue-500" />
+                  <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+                    <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500" />
                     Contact Activity
                   </CardTitle>
-                  <CardDescription>Weekly contact submissions</CardDescription>
+                  <CardDescription className="text-xs sm:text-sm">Weekly contact submissions</CardDescription>
                 </div>
                 <Select defaultValue="week">
-                  <SelectTrigger className="w-[100px]">
+                  <SelectTrigger className="w-full sm:w-[100px]">
                     <SelectValue placeholder="Period" />
                   </SelectTrigger>
                   <SelectContent>
@@ -559,8 +560,8 @@ export default function AdminDashboard() {
                 </Select>
               </div>
             </CardHeader>
-            <CardContent className="pt-6">
-              <div className="h-[250px] w-full">
+            <CardContent className="pt-4 sm:pt-6">
+              <div className="h-[200px] sm:h-[250px] w-full">
                 {weeklyData.length > 0 ? (
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={weeklyData}>

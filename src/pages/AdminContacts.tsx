@@ -180,10 +180,10 @@ export default function AdminContacts() {
         <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
         <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
         
-        <div className="relative flex flex-col md:flex-row md:items-center md:justify-between">
+        <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <motion.h1 
-              className="text-3xl font-bold tracking-tight"
+              className="text-2xl sm:text-3xl font-bold tracking-tight"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -191,7 +191,7 @@ export default function AdminContacts() {
               Contacts Management
             </motion.h1>
             <motion.p 
-              className="mt-2 text-white/80"
+              className="mt-1 sm:mt-2 text-white/80 text-sm sm:text-base"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
@@ -200,61 +200,61 @@ export default function AdminContacts() {
             </motion.p>
           </div>
           <motion.div 
-            className="mt-4 md:mt-0 flex items-center gap-3"
+            className="mt-3 sm:mt-0 flex flex-wrap items-center gap-2 sm:gap-3"
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            <Badge variant="secondary" className="px-4 py-2 bg-white/20 text-white border-white/30 backdrop-blur-sm">
-              <MessageSquare className="h-4 w-4 mr-2" />
+            <Badge variant="secondary" className="px-2 sm:px-4 py-1.5 sm:py-2 bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs sm:text-sm">
+              <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
               {stats?.data?.total || 0} Total
             </Badge>
             <Button 
               variant="secondary" 
               size="sm" 
-              className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+              className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm h-8 sm:h-9"
               onClick={() => refetch()}
               disabled={isFetching}
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isFetching ? 'animate-spin' : ''}`} />
-              Refresh
+              <RefreshCw className={`h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 ${isFetching ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">Refresh</span>
             </Button>
             <Button 
               variant="secondary" 
               size="sm" 
-              className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+              className="bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm h-8 sm:h-9"
               onClick={handleExport}
             >
-              <Download className="h-4 w-4 mr-2" />
-              Export
+              <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2" />
+              <span className="hidden sm:inline">Export</span>
             </Button>
           </motion.div>
         </div>
 
         {/* Quick Stats Pills */}
         <motion.div 
-          className="mt-6 flex flex-wrap gap-3"
+          className="mt-4 sm:mt-6 flex flex-wrap gap-2 sm:gap-3"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
+          <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm backdrop-blur-sm">
             <span className="font-semibold">{stats?.data?.byStatus?.new || 0}</span> new
           </div>
-          <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
+          <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm backdrop-blur-sm">
             <span className="font-semibold">{stats?.data?.byStatus?.read || 0}</span> read
           </div>
-          <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
+          <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm backdrop-blur-sm">
             <span className="font-semibold">{stats?.data?.byStatus?.replied || 0}</span> replied
           </div>
-          <div className="rounded-full bg-white/10 px-4 py-2 text-sm backdrop-blur-sm">
+          <div className="rounded-full bg-white/10 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm backdrop-blur-sm">
             <span className="font-semibold">{stats?.data?.byStatus?.archived || 0}</span> archived
           </div>
         </motion.div>
       </motion.div>
 
       {/* Stats Cards with Hover Effects */}
-      <motion.div variants={itemVariants} className="grid gap-4 md:grid-cols-4">
+      <motion.div variants={itemVariants} className="grid gap-3 sm:gap-4 md:grid-cols-4">
         {[
           { label: "New", value: stats?.data?.byStatus?.new || 0, color: "blue", icon: MessageSquare },
           { label: "Read", value: stats?.data?.byStatus?.read || 0, color: "purple", icon: Eye },
@@ -287,13 +287,13 @@ export default function AdminContacts() {
       {/* Filters Section */}
       <motion.div variants={itemVariants}>
         <Card className="overflow-hidden">
-          <CardContent className="p-4">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-2">
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col gap-3 sm:gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search by name, email, or subject..."
+                    placeholder="Search by name, email..."
                     value={search}
                     onChange={(e) => {
                       setSearch(e.target.value);
@@ -312,29 +312,31 @@ export default function AdminContacts() {
                     </Button>
                   )}
                 </div>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setShowFilters(!showFilters)}
-                  className={`transition-colors ${showFilters ? 'bg-primary text-primary-foreground' : ''}`}
-                >
-                  <Filter className="h-4 w-4" />
-                </Button>
-                <Select value={statusFilter} onValueChange={(value) => {
-                  setStatusFilter(value);
-                  setPage(1);
-                }}>
-                  <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="new">New</SelectItem>
-                    <SelectItem value="read">Read</SelectItem>
-                    <SelectItem value="replied">Replied</SelectItem>
-                    <SelectItem value="archived">Archived</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setShowFilters(!showFilters)}
+                    className={`transition-colors ${showFilters ? 'bg-primary text-primary-foreground' : ''}`}
+                  >
+                    <Filter className="h-4 w-4" />
+                  </Button>
+                  <Select value={statusFilter} onValueChange={(value) => {
+                    setStatusFilter(value);
+                    setPage(1);
+                  }}>
+                    <SelectTrigger className="w-[130px] sm:w-[150px]">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Status</SelectItem>
+                      <SelectItem value="new">New</SelectItem>
+                      <SelectItem value="read">Read</SelectItem>
+                      <SelectItem value="replied">Replied</SelectItem>
+                      <SelectItem value="archived">Archived</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <AnimatePresence>

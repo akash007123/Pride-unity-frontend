@@ -112,13 +112,13 @@ const adminNavItems = [
     badge: null,
     color: 'from-red-500 to-rose-500'
   },
-  {
-    title: 'All Users',
-    href: '/admin/all-users',
-    icon: CircleUser,
-    badge: null,
-    color: 'from-violet-500 to-purple-500'
-  },
+  // {
+  //   title: 'All Users',
+  //   href: '/admin/all-users',
+  //   icon: CircleUser,
+  //   badge: null,
+  //   color: 'from-violet-500 to-purple-500'
+  // },
   {
     title: 'Reports',
     href: '/admin/reports',
@@ -242,7 +242,7 @@ function AdminSidebar() {
                                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                                 >
                                   <SidebarMenuBadge>
-                                    <Badge variant="destructive" className="h-5 px-1.5 text-[10px] animate-pulse">
+                                    <Badge variant="destructive" className="h-5 px-1.5 mb-5 text-[10px] animate-pulse">
                                       {newContactsCount}
                                     </Badge>
                                   </SidebarMenuBadge>
@@ -255,7 +255,7 @@ function AdminSidebar() {
                                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                                 >
                                   <SidebarMenuBadge>
-                                    <Badge variant="destructive" className="h-5 px-1.5 text-[10px] animate-pulse">
+                                    <Badge variant="destructive" className="h-5 px-1.5 mb-5 text-[10px] animate-pulse">
                                       {newVolunteersCount}
                                     </Badge>
                                   </SidebarMenuBadge>
@@ -319,12 +319,12 @@ function AdminSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
+                {/* <SidebarMenuButton asChild>
                   <Link to="/admin/events/create" className="flex items-center group">
                     <Calendar className="h-4 w-4 text-muted-foreground group-hover:text-foreground" />
                     <span>Create Event</span>
                   </Link>
-                </SidebarMenuButton>
+                </SidebarMenuButton> */}
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>

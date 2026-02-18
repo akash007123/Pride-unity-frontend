@@ -358,7 +358,7 @@ function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarGroupLabel className="px-4 text-xs font-semibold uppercase tracking-wider">
             Shortcuts
           </SidebarGroupLabel>
@@ -383,7 +383,7 @@ function AdminSidebar() {
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+        </SidebarGroup> */}
       </SidebarContent>
       
       <SidebarFooter className="border-t border-border/50 p-4">

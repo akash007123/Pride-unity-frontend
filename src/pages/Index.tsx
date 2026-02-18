@@ -23,6 +23,45 @@ const testimonials = [
   { name: "Arush Sharma", role: "Advocate", text: "This platform gives voice to stories that need to be heard. Powerful and beautiful." },
 ];
 
+// Animation variants for text
+const textVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (delay: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      delay,
+      ease: [0.215, 0.61, 0.355, 1]
+    }
+  })
+};
+
+// Stagger children animations
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 100,
+      damping: 12
+    }
+  }
+};
+
 const Index = () => {
   return (
     <>
@@ -34,83 +73,253 @@ const Index = () => {
       />
       <StructuredData data={organizationSchema} />
       <StructuredData data={websiteSchema} />
+      
       {/* Hero */}
       <section className="relative min-h-[95vh] flex items-center overflow-hidden">
-        {/* Animated Grid Background */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(120,80,200,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(120,80,200,0.03)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black_40%,transparent_100%)]" />
-          <img src={heroPride} alt="" className="w-full h-full object-cover opacity-20 dark:opacity-10" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background" />
-          <div className="absolute inset-0 bg-gradient-to-r from-pride-purple/5 via-transparent to-pride-pink/5" />
-        </div>
+        {/* Animated Grid Background with Pulse */}
+        <motion.div 
+          animate={{ 
+            opacity: [0.5, 0.8, 0.5],
+            scale: [1, 1.02, 1]
+          }}
+          transition={{ duration: 4, repeat: Infinity }}
+          className="absolute inset-0 bg-[linear-gradient(rgba(120,80,200,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(120,80,200,0.03)_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black_40%,transparent_100%)]"
+        />
+        
+        {/* Animated Image with Slow Zoom */}
+        <motion.div
+          animate={{ 
+            scale: [1, 1.1, 1],
+            rotate: [0, 1, -1, 0]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          className="w-full h-full absolute inset-0"
+        >
+          <img 
+            src={heroPride} 
+            alt="" 
+            className="w-full h-full object-cover opacity-20 dark:opacity-10" 
+          />
+        </motion.div>
+        
+        {/* Gradient Overlays with Animation */}
+        <motion.div 
+          animate={{ 
+            opacity: [0.8, 1, 0.8],
+          }}
+          transition={{ duration: 5, repeat: Infinity }}
+          className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background"
+        />
+        
+        {/* Animated Light Sweeps */}
+        <motion.div 
+          animate={{ 
+            x: ['-100%', '100%'],
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-pride-purple/5 to-transparent"
+        />
+        
+        <motion.div 
+          animate={{ 
+            x: ['100%', '-100%'],
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear", delay: 7.5 }}
+          className="absolute inset-0 bg-gradient-to-r from-transparent via-pride-pink/5 to-transparent"
+        />
 
-        {/* Enhanced Floating Orbs */}
+        {/* NEW: Animated color-changing radial gradient */}
+        <motion.div
+          animate={{
+            background: [
+              'radial-gradient(circle at 30% 50%, rgba(168,85,247,0.15) 0%, transparent 50%)',
+              'radial-gradient(circle at 70% 50%, rgba(236,72,153,0.15) 0%, transparent 50%)',
+              'radial-gradient(circle at 50% 30%, rgba(59,130,246,0.15) 0%, transparent 50%)',
+              'radial-gradient(circle at 30% 50%, rgba(168,85,247,0.15) 0%, transparent 50%)',
+            ]
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+          className="absolute inset-0"
+        />
+
+        {/* Enhanced Floating Orbs with More Complex Animations */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Primary Orbs with Complex Motion Paths */}
           <motion.div
             animate={{
-              x: [0, 30, 0],
-              y: [0, -30, 0],
-              scale: [1, 1.1, 1],
+              x: [0, 40, -20, 30, 0],
+              y: [0, -40, 20, -30, 0],
+              scale: [1, 1.2, 0.9, 1.1, 1],
+              rotate: [0, 45, -45, 30, 0],
+              opacity: [0.3, 0.5, 0.3, 0.4, 0.3],
             }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
             className="absolute top-20 left-[5%] w-80 h-80 rounded-full bg-gradient-to-br from-pride-purple/30 to-pride-blue/20 blur-3xl"
           />
+          
           <motion.div
             animate={{
-              x: [0, -40, 0],
-              y: [0, 40, 0],
-              scale: [1, 1.2, 1],
+              x: [0, -50, 30, -40, 0],
+              y: [0, 50, -30, 40, 0],
+              scale: [1, 1.3, 0.8, 1.2, 1],
+              rotate: [0, -45, 45, -30, 0],
+              opacity: [0.2, 0.4, 0.2, 0.3, 0.2],
             }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             className="absolute bottom-20 right-[10%] w-96 h-96 rounded-full bg-gradient-to-br from-pride-pink/25 to-pride-red/15 blur-3xl"
           />
+          
           <motion.div
             animate={{
-              x: [0, 50, 0],
-              y: [0, -50, 0],
+              x: [0, 60, -30, 50, 0],
+              y: [0, -60, 40, -50, 0],
+              scale: [1, 1.1, 1.3, 0.9, 1],
+              borderRadius: [
+                '50%', 
+                '40% 60% 70% 30% / 40% 50% 60% 50%', 
+                '30% 70% 50% 50% / 50% 40% 60% 40%',
+                '50%'
+              ],
             }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-            className="absolute top-1/3 right-[25%] w-64 h-64 rounded-full bg-gradient-to-br from-pride-orange/20 to-pride-yellow/15 blur-3xl"
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            className="absolute top-1/3 right-[25%] w-64 h-64 bg-gradient-to-br from-pride-orange/20 to-pride-yellow/15 blur-3xl"
           />
+          
           <motion.div
             animate={{
-              x: [0, -30, 0],
-              y: [0, 30, 0],
-              scale: [1, 1.15, 1],
+              x: [0, -40, 50, -30, 0],
+              y: [0, 40, -50, 30, 0],
+              scale: [1, 1.2, 0.9, 1.15, 1],
+              filter: [
+                'blur(48px)',
+                'blur(64px)',
+                'blur(32px)',
+                'blur(48px)',
+              ],
             }}
-            transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-            className="absolute bottom-1/3 left-[20%] w-56 h-56 rounded-full bg-gradient-to-br from-pride-green/15 to-pride-blue/10 blur-3xl"
+            transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+            className="absolute bottom-1/3 left-[20%] w-56 h-56 rounded-full bg-gradient-to-br from-pride-green/15 to-pride-blue/10"
           />
+
+          {/* NEW: Twinkling stars */}
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={`star-${i}`}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{
+                opacity: [0, 1, 0],
+                scale: [0, 1.5, 0],
+                x: [0, (Math.random() - 0.5) * 100],
+                y: [0, (Math.random() - 0.5) * 100],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 5,
+                ease: "easeInOut",
+              }}
+              className="absolute w-1 h-1 rounded-full bg-white"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                boxShadow: '0 0 10px rgba(255,255,255,0.8)',
+              }}
+            />
+          ))}
+
+          {/* Rotating Rings with Color Transitions */}
           <motion.div
             animate={{
               rotate: [0, 360],
+              scale: [1, 1.2, 1],
+              borderColor: [
+                'rgba(168, 85, 247, 0.2)',
+                'rgba(236, 72, 153, 0.2)',
+                'rgba(59, 130, 246, 0.2)',
+                'rgba(168, 85, 247, 0.2)',
+              ],
             }}
             transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-            className="absolute top-1/2 left-1/2 w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-pride-purple/5"
+            className="absolute top-1/2 left-1/2 w-[600px] h-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2"
           />
+          
           <motion.div
             animate={{
               rotate: [0, -360],
+              scale: [1, 0.8, 1],
+              borderColor: [
+                'rgba(236, 72, 153, 0.15)',
+                'rgba(168, 85, 247, 0.15)',
+                'rgba(59, 130, 246, 0.15)',
+                'rgba(236, 72, 153, 0.15)',
+              ],
             }}
             transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
-            className="absolute top-1/2 left-1/2 w-[400px] h-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-pride-pink/5"
+            className="absolute top-1/2 left-1/2 w-[400px] h-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2"
+          />
+
+          {/* NEW: Animated arcs */}
+          <motion.div
+            animate={{
+              rotate: [0, 360],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            className="absolute top-1/2 left-1/2 w-[500px] h-[500px] -translate-x-1/2 -translate-y-1/2"
+          >
+            <div className="absolute inset-0 border-2 border-dashed border-pride-purple/20 rounded-full" />
+            <motion.div
+              animate={{
+                rotate: [0, 180],
+              }}
+              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+              className="absolute top-0 left-1/2 w-4 h-4 -ml-2 -mt-2 rounded-full bg-pride-pink/30 blur-sm"
+            />
+          </motion.div>
+
+          {/* Pulsing Core */}
+          <motion.div
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0.1, 0.3, 0.1],
+            }}
+            transition={{ duration: 4, repeat: Infinity }}
+            className="absolute top-1/2 left-1/2 w-32 h-32 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-pride-purple/30 to-pride-pink/30 blur-xl"
+          />
+
+          {/* NEW: Floating progress bars */}
+          <motion.div
+            animate={{
+              x: [-100, window.innerWidth + 100],
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute top-[15%] left-0 w-32 h-1 bg-gradient-to-r from-pride-purple/30 to-pride-pink/30 rounded-full blur-sm"
+          />
+          <motion.div
+            animate={{
+              x: [-100, window.innerWidth + 100],
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear", delay: 5 }}
+            className="absolute top-[85%] left-0 w-48 h-1 bg-gradient-to-r from-pride-blue/30 to-pride-green/30 rounded-full blur-sm"
           />
         </div>
 
-        {/* Floating Particles */}
+        {/* Enhanced Floating Particles with More Variety */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(20)].map((_, i) => (
+          {/* Small particles */}
+          {[...Array(30)].map((_, i) => (
             <motion.div
               key={i}
               initial={{ opacity: 0, scale: 0 }}
               animate={{
-                opacity: [0, 1, 0],
-                scale: [0, 1, 0],
-                y: [0, -100],
-                x: [0, Math.sin(i) * 30],
+                opacity: [0, 0.8, 0],
+                scale: [0, 1.5, 0],
+                y: [0, -150 - Math.random() * 100],
+                x: [0, (Math.random() - 0.5) * 100],
+                rotate: [0, 360],
               }}
               transition={{
-                duration: 3 + Math.random() * 2,
+                duration: 4 + Math.random() * 3,
                 repeat: Infinity,
                 delay: Math.random() * 5,
                 ease: "easeOut",
@@ -128,73 +337,177 @@ const Index = () => {
                   'hsl(var(--pride-purple))',
                   'hsl(var(--pride-pink))',
                 ][i % 7],
+                boxShadow: '0 0 10px currentColor',
+              }}
+            />
+          ))}
+
+          {/* Larger floating shapes */}
+          {[...Array(8)].map((_, i) => (
+            <motion.div
+              key={`shape-${i}`}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{
+                opacity: [0, 0.3, 0],
+                scale: [0, 1, 0],
+                y: [0, -200],
+                x: [0, (Math.random() - 0.5) * 150],
+                rotate: [0, 180],
+              }}
+              transition={{
+                duration: 8 + Math.random() * 4,
+                repeat: Infinity,
+                delay: Math.random() * 8,
+                ease: "easeOut",
+              }}
+              className="absolute w-4 h-4 rounded-lg"
+              style={{
+                left: `${10 + Math.random() * 80}%`,
+                top: `${70 + Math.random() * 20}%`,
+                background: `linear-gradient(135deg, hsl(var(--pride-${['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'][i % 7]}) / 0.3), transparent)`,
+                backdropFilter: 'blur(4px)',
+                border: '1px solid rgba(255,255,255,0.1)',
               }}
             />
           ))}
         </div>
 
+        {/* Main Content with Staggered Animations */}
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Badge */}
+          <motion.div 
+            className="max-w-4xl mx-auto text-center"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {/* Badge with Enhanced Animation */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full glass text-sm font-medium text-primary mb-8 group"
+              variants={itemVariants}
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full glass text-sm font-medium text-primary mb-8 group cursor-pointer"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               <motion.span
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 180, 360],
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
               >
                 <Sparkles size={16} className="text-pride-yellow" />
               </motion.span>
               <span>Celebrating Pride & Identity</span>
               <motion.span
-                className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                animate={{ 
+                  opacity: [0, 1, 0],
+                  x: [0, 10, 0],
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="ml-1"
               >
                 ✨
               </motion.span>
             </motion.div>
 
-            {/* Main Heading with Gradient */}
+            {/* Main Heading with Typewriter Effect */}
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
+              variants={itemVariants}
               className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-heading font-bold leading-tight mb-6"
             >
-              <span className="block text-foreground">Your Identity Is</span>
+              <motion.span 
+                className="block text-foreground"
+                animate={{ 
+                  textShadow: [
+                    '0 0 0px rgba(168,85,247,0)',
+                    '0 0 20px rgba(168,85,247,0.3)',
+                    '0 0 0px rgba(168,85,247,0)',
+                  ],
+                  y: [0, -2, 0, 2, 0],
+                }}
+                transition={{ 
+                  duration: 3, 
+                  repeat: Infinity,
+                  y: { duration: 5, repeat: Infinity }
+                }}
+              >
+                Your Identity Is
+              </motion.span>
+              
               <motion.span
                 initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.4, type: "spring", stiffness: 100 }}
+                animate={{ 
+                  opacity: 1, 
+                  scale: 1,
+                  textShadow: [
+                    '0 0 0px rgba(236,72,153,0)',
+                    '0 0 30px rgba(236,72,153,0.5)',
+                    '0 0 0px rgba(236,72,153,0)',
+                  ],
+                }}
+                transition={{ 
+                  duration: 0.8, 
+                  delay: 0.4, 
+                  type: "spring", 
+                  stiffness: 100,
+                  textShadow: {
+                    duration: 2,
+                    repeat: Infinity,
+                    delay: 1
+                  }
+                }}
                 className="pride-gradient-text inline-block"
               >
                 Beautiful
               </motion.span>
             </motion.h1>
 
-            {/* Subtitle */}
+            {/* Subtitle with Word Animation */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              variants={itemVariants}
               className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
             >
               A safe space to celebrate who you are, share your story, and connect with a community
-              that embraces <span className="text-pride-pink font-semibold">love</span> in all its <span className="pride-gradient-text font-semibold">colors</span>.
+              that embraces{" "}
+              <motion.span 
+                className="text-pride-pink font-semibold inline-block"
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  color: [
+                    'hsl(var(--pride-pink))',
+                    'hsl(var(--pride-red))',
+                    'hsl(var(--pride-pink))',
+                  ],
+                  rotate: [0, 5, -5, 0],
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                love
+              </motion.span>{" "}
+              in all its{" "}
+              <motion.span 
+                className="pride-gradient-text font-semibold inline-block"
+                animate={{ 
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                }}
+                transition={{ duration: 5, repeat: Infinity }}
+                style={{ backgroundSize: '200% 200%' }}
+              >
+                colors
+              </motion.span>.
             </motion.p>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons with Enhanced Hover Effects */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              variants={itemVariants}
               className="flex flex-wrap justify-center gap-4 mb-12"
             >
               <Link to="/my-story">
                 <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: "0 0 40px hsl(var(--primary) / 0.4)" }}
+                  whileHover={{ 
+                    scale: 1.05, 
+                    boxShadow: "0 0 40px hsl(var(--primary) / 0.4)",
+                    y: -2
+                  }}
                   whileTap={{ scale: 0.98 }}
                   className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-xl font-heading font-semibold text-white overflow-hidden"
                   style={{
@@ -205,6 +518,12 @@ const Index = () => {
                   <motion.span
                     className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"
                   />
+                  <motion.span
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                  >
+                    <Sparkles size={18} className="mr-1" />
+                  </motion.span>
                   <span>Read My Story</span>
                   <motion.span
                     animate={{ x: [0, 5, 0] }}
@@ -214,35 +533,47 @@ const Index = () => {
                   </motion.span>
                 </motion.button>
               </Link>
+              
               <Link to="/community">
                 <motion.button
-                  whileHover={{ scale: 1.05, backgroundColor: "hsl(var(--primary) / 0.1)" }}
+                  whileHover={{ 
+                    scale: 1.05, 
+                    backgroundColor: "hsl(var(--primary) / 0.15)",
+                    y: -2
+                  }}
                   whileTap={{ scale: 0.98 }}
-                  className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-xl font-heading font-semibold border-2 transition-all duration-300"
+                  className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-xl font-heading font-semibold border-2 transition-all duration-300 overflow-hidden"
                   style={{
                     borderColor: "hsl(var(--primary))",
                     color: "hsl(var(--primary))",
                   }}
                 >
                   <motion.span
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      rotate: [0, 15, -15, 0],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
                   >
                     <Heart size={18} className="text-pride-pink" />
                   </motion.span>
                   <span>Join Community</span>
+                  <motion.span
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+                  />
                 </motion.button>
               </Link>
             </motion.div>
 
-            {/* Social Proof / Trust Indicators */}
+            {/* Social Proof with Enhanced Animations */}
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
+              variants={itemVariants}
               className="flex flex-wrap justify-center items-center gap-6 text-sm text-muted-foreground"
             >
-              <div className="flex items-center gap-2">
+              <motion.div 
+                className="flex items-center gap-2"
+                whileHover={{ scale: 1.05 }}
+              >
                 <div className="flex -space-x-2">
                   {[1, 2, 3, 4].map((i) => (
                     <motion.div
@@ -250,7 +581,12 @@ const Index = () => {
                       initial={{ scale: 0, x: -10 }}
                       animate={{ scale: 1, x: 0 }}
                       transition={{ delay: 0.8 + i * 0.1 }}
-                      className="w-8 h-8 rounded-full border-2 border-background flex items-center justify-center text-xs font-bold"
+                      whileHover={{ 
+                        scale: 1.2, 
+                        y: -5,
+                        transition: { type: "spring", stiffness: 300 }
+                      }}
+                      className="w-8 h-8 rounded-full border-2 border-background flex items-center justify-center text-xs font-bold cursor-default"
                       style={{
                         background: [
                           "hsl(var(--pride-red))",
@@ -265,10 +601,20 @@ const Index = () => {
                     </motion.div>
                   ))}
                 </div>
-                <span className="ml-2">10K+ members</span>
-              </div>
+                <motion.span 
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  10K+ members
+                </motion.span>
+              </motion.div>
+              
               <span className="hidden sm:inline text-border">•</span>
-              <div className="flex items-center gap-1">
+              
+              <motion.div 
+                className="flex items-center gap-1"
+                whileHover={{ scale: 1.05 }}
+              >
                 <div className="flex">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <motion.svg
@@ -276,7 +622,12 @@ const Index = () => {
                       initial={{ scale: 0, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ delay: 1.2 + i * 0.05 }}
-                      className="w-4 h-4 text-yellow-500"
+                      whileHover={{ 
+                        scale: 1.3,
+                        rotate: [0, -10, 10, 0],
+                        transition: { duration: 0.3 }
+                      }}
+                      className="w-4 h-4 text-yellow-500 cursor-default"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -284,36 +635,16 @@ const Index = () => {
                     </motion.svg>
                   ))}
                 </div>
-                <span className="ml-1">4.9/5 rating</span>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="flex flex-col items-center gap-2 text-muted-foreground/60"
-          >
-            <span className="text-xs uppercase tracking-widest">Scroll</span>
-            <motion.div
-              className="w-6 h-10 rounded-full border-2 border-current flex justify-center pt-2"
-            >
-              <motion.div
-                animate={{ y: [0, 12, 0], opacity: [1, 0, 1] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-                className="w-1.5 h-1.5 rounded-full bg-current"
-              />
+                <motion.span 
+                  animate={{ opacity: [0.7, 1, 0.7] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                >
+                  4.9/5 rating
+                </motion.span>
+              </motion.div>
             </motion.div>
           </motion.div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Pride Statement */}

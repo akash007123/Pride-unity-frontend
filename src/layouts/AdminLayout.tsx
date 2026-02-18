@@ -55,7 +55,8 @@ import {
   Keyboard,
   Maximize2,
   Minimize2,
-  CircleUser
+  CircleUser,
+  Send
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
@@ -108,6 +109,14 @@ const adminNavItems: NavItem[] = [
     roles: ['Admin', 'Sub Admin']
   },
   {
+    title: 'Newsletter',
+    href: '/admin/newsletter',
+    icon: Send,
+    badge: null,
+    color: 'from-pink-500 to-rose-500',
+    roles: ['Admin', 'Sub Admin']
+  },
+  {
     title: 'Community',
     href: '/admin/community',
     icon: Users,
@@ -122,6 +131,14 @@ const adminNavItems: NavItem[] = [
     badge: 'new',
     color: 'from-amber-500 to-orange-500',
     roles: ['Admin', 'Sub Admin']
+  },
+  {
+    title: 'Custom Volunteer',
+    href: '/admin/custom-volunteer',
+    icon: UserPlus,
+    badge: 'new',
+    color: 'from-amber-500 to-orange-500',
+    roles: ['Admin', 'Sub Admin', 'Volunteer', 'Member']
   },
   {
     title: 'Events',
@@ -341,7 +358,7 @@ function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarGroupLabel className="px-4 text-xs font-semibold uppercase tracking-wider">
             Shortcuts
           </SidebarGroupLabel>
@@ -366,7 +383,7 @@ function AdminSidebar() {
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+        </SidebarGroup> */}
       </SidebarContent>
       
       <SidebarFooter className="border-t border-border/50 p-4">

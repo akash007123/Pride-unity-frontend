@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { SEOHead, StructuredData, organizationSchema, createBreadcrumbSchema } from "@/components/SEOHead";
 import { Heart, Target, Eye, Shield, Lightbulb, Users } from "lucide-react";
 
 const values = [
@@ -19,7 +20,19 @@ const timeline = [
 ];
 
 const About = () => (
-  <div>
+  <>
+    <SEOHead
+      title="About Us"
+      description="Learn about PrideCommunity's mission to create a safe, inclusive space for LGBTQ+ individuals. Discover our story, values, and commitment to equality and diversity."
+      keywords={['about LGBTQ+ community', 'LGBTQ+ mission', 'our story', 'pride values', 'LGBTQ+ advocacy']}
+      canonicalUrl="/about"
+      section="About"
+    />
+    <StructuredData data={organizationSchema} />
+    <StructuredData data={createBreadcrumbSchema([
+      { name: 'Home', url: 'https://pridevoice.netlify.app/' },
+      { name: 'About', url: 'https://pridevoice.netlify.app/about' }
+    ])} />
     {/* Hero */}
     <section className="py-20 sm:py-28 pride-gradient-subtle">
       <div className="container mx-auto px-4">
@@ -116,7 +129,7 @@ const About = () => (
         </div>
       </div>
     </AnimatedSection>
-  </div>
+  </>
 );
 
 export default About;

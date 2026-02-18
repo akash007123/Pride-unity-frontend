@@ -1,14 +1,80 @@
-User-agent: Googlebot
-Allow: /
+# PrideCommunity Robots.txt
+# Production-level SEO optimized robots.txt
 
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
+# User Agents
 User-agent: *
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Googlebot-News
+User-agent: Googlebot-Video
+User-agent: Bingbot
+User-agent: Slurp
+User-agent: DuckDuckBot
+User-agent: Baiduspider
+User-agent: YandexBot
+User-agent: Sogou web spider
+User-agent: Exabot
+User-agent: FACEBOOKEXTERNALHIT
+User-agent: Twitterbot
+
+# Allow all crawlers
 Allow: /
+
+# Sitemap
+Sitemap: https://pridevoice.netlify.app/sitemap.xml
+Sitemap: https://pridevoice.netlify.app/sitemap-pages.xml
+Sitemap: https://pridevoice.netlify.app/sitemap-images.xml
+
+# Crawl-delay (optional, for polite crawling)
+Crawl-delay: 1
+
+# Disallow admin/private areas
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /static/
+Disallow: /uploads/
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.js$
+Disallow: /*.css$
+
+# Prevent indexing of duplicate content
+Disallow: /?*utm_source=
+Disallow: /?*utm_medium=
+Disallow: /?*utm_campaign=
+Disallow: /?*fbclid=
+Disallow: /?*gclid=
+
+# Allow important paths
+Allow: /about
+Allow: /services
+Allow: /contact
+Allow: /community
+Allow: /events
+Allow: /blog
+Allow: /volunteer
+Allow: /donate
+Allow: /accessibility
+Allow: /privacy
+Allow: /terms
+
+# Clean URLs (if using hash-based routing)
+Allow: /#about
+Allow: /#services
+Allow: /#contact
+
+# Host directive
+Host: https://pridevoice.netlify.app
+
+# Security and Privacy
+# Do not crawl sensitive user data
+Disallow: /profile/*
+Disallow: /settings/*
+Disallow: /admin/*
+
+# Performance optimization
+# Don't crawl pagination beyond page 10
+Disallow: /blog?page=1*
+Disallow: /community?page=[2-9]*
+Disallow: /events?page=[2-9]*

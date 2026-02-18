@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowRight, Heart, Users, Globe, Sparkles, Quote } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { SEOHead, StructuredData, organizationSchema, websiteSchema } from "@/components/SEOHead";
 import heroPride from "@/assets/hero-pride.jpg";
 
 const stats = [
@@ -24,7 +25,15 @@ const testimonials = [
 
 const Index = () => {
   return (
-    <div>
+    <>
+      <SEOHead
+        title="Home"
+        description="Join PrideCommunity - a safe space for LGBTQ+ individuals. Access resources, connect with community members, attend events, and find support. Together we unite in diversity and celebrate pride."
+        keywords={['LGBTQ+', 'pride', 'LGBTQ+ community', 'LGBTQ+ support', 'gay rights', 'transgender support', 'pride events', 'LGBT community']}
+        canonicalUrl="/"
+      />
+      <StructuredData data={organizationSchema} />
+      <StructuredData data={websiteSchema} />
       {/* Hero */}
       <section className="relative min-h-[90vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
@@ -188,7 +197,7 @@ const Index = () => {
           </div>
         </div>
       </AnimatedSection>
-    </div>
+    </>
   );
 };
 

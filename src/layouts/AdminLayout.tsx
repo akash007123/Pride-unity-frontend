@@ -55,7 +55,8 @@ import {
   Keyboard,
   Maximize2,
   Minimize2,
-  CircleUser
+  CircleUser,
+  Send
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
@@ -105,6 +106,14 @@ const adminNavItems: NavItem[] = [
     icon: Mail,
     badge: 'new',
     color: 'from-purple-500 to-pink-500',
+    roles: ['Admin', 'Sub Admin']
+  },
+  {
+    title: 'Newsletter',
+    href: '/admin/newsletter',
+    icon: Send,
+    badge: null,
+    color: 'from-pink-500 to-rose-500',
     roles: ['Admin', 'Sub Admin']
   },
   {

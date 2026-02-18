@@ -4,24 +4,56 @@ import { Mail, Check, Loader2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+// API configuration
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 export const NewsletterSubscription = () => {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
 
     setStatus("loading");
+    setErrorMessage("");
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch(`${API_URL}/api/newsletter`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
 
-    setStatus("success");
-    setEmail("");
+      const data = await response.json();
 
-    // Reset after 3 seconds
-    setTimeout(() => setStatus("idle"), 3000);
+      if (!response.ok) {
+        setStatus("error");
+        setErrorMessage(data.message || "Failed to subscribe. Please try again.");
+        // Reset after 3 seconds
+        setTimeout(() => {
+          setStatus("idle");
+          setErrorMessage("");
+        }, 3000);
+        return;
+      }
+
+      setStatus("success");
+      setEmail("");
+
+      // Reset after 3 seconds
+      setTimeout(() => setStatus("idle"), 3000);
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage("An error occurred. Please try again.");
+      setTimeout(() => {
+        setStatus("idle");
+        setErrorMessage("");
+      }, 3000);
+    }
   };
 
   return (
@@ -80,6 +112,16 @@ export const NewsletterSubscription = () => {
             className="text-sm text-green-600 dark:text-green-400"
           >
             🎉 Thank you for subscribing! Check your inbox for a warm welcome.
+          </motion.p>
+        )}
+
+        {status === "error" && errorMessage && (
+          <motion.p
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-sm text-red-600 dark:text-red-400"
+          >
+            {errorMessage}
           </motion.p>
         )}
 

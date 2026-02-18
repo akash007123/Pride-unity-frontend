@@ -29,6 +29,7 @@ import Terms from "./pages/Terms";
 import AccessibilityPage from "./pages/Accessibility";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminContacts from "./pages/AdminContacts";
+import AdminNewsletter from "./pages/AdminNewsletter";
 import AdminCommunity from "./pages/AdminCommunity";
 import AdminVolunteers from "./pages/AdminVolunteers";
 import AdminEvents from "./pages/AdminEvents";
@@ -100,6 +101,7 @@ const App = () => (
               >
                 <Route path="/admin" index element={<AdminDashboard />} />
                 <Route path="admin/contacts" element={<RoleRoute allowedRoles={['Admin', 'Sub Admin']}><AdminContacts /></RoleRoute>} />
+                <Route path="admin/newsletter" element={<RoleRoute allowedRoles={['Admin', 'Sub Admin']}><AdminNewsletter /></RoleRoute>} />
                 <Route path="admin/community" element={<RoleRoute allowedRoles={['Admin', 'Sub Admin']}><AdminCommunity /></RoleRoute>} />
                 <Route path="admin/volunteer" element={<RoleRoute allowedRoles={['Admin', 'Sub Admin']}><AdminVolunteers /></RoleRoute>} />
                 <Route path="admin/events" element={<RoleRoute allowedRoles={['Admin', 'Sub Admin', 'Volunteer']}><AdminEvents /></RoleRoute>} />
